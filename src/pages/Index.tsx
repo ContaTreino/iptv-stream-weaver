@@ -51,9 +51,9 @@ const Index = () => {
           {/* Player Container */}
           <div className="flex-1 bg-player-bg relative">
             <iframe 
-              src="/iptv-player-v7.html" 
+              src="/iptv-player-v9-v3.html" 
               className="w-full h-full border-0"
-              title="IPTV Player"
+              title="IPTV Player V9"
               allowFullScreen
             />
             
