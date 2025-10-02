@@ -1180,6 +1180,7 @@
       
       .main-content {
         display: flex;
+        flex-direction: row-reverse; /* Player do lado direito */
         flex: 1;
         overflow: hidden;
       }
@@ -1196,7 +1197,7 @@
         flex: 0 0 420px;
         display: flex !important;
         flex-direction: column;
-        border-left: 2px solid var(--bg-quaternary);
+        border-right: 2px solid var(--bg-quaternary); /* Mudou de left para right */
         background: var(--bg-secondary);
         height: calc(100vh - 60px);
         overflow: hidden;
