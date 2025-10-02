@@ -1984,41 +1984,10 @@
         </div>
         <div class="modal-body">
           <form id="playlistForm">
-            <!-- Tabs para alternar entre URL e Upload -->
-            <ul class="nav nav-tabs mb-3" id="playlistTabs" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="url-tab" data-bs-toggle="tab" data-bs-target="#url-pane" type="button" role="tab">
-                  <i class="fas fa-link me-2"></i>URL da Playlist
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-pane" type="button" role="tab">
-                  <i class="fas fa-upload me-2"></i>Upload de Arquivo
-                </button>
-              </li>
-            </ul>
-            
-            <div class="tab-content" id="playlistTabContent">
-              <!-- Tab de URL -->
-              <div class="tab-pane fade show active" id="url-pane" role="tabpanel">
-                <div class="mb-3">
-                  <label for="playlistUrl" class="form-label">URL da Playlist</label>
-                  <input type="url" class="form-control" id="playlistUrl" placeholder="http://exemplo.com/get.php?username=user&password=pass&type=m3u_plus&output=ts">
-                  <div class="form-text">Cole a URL completa da sua playlist IPTV</div>
-                </div>
-              </div>
-              
-              <!-- Tab de Upload -->
-              <div class="tab-pane fade" id="upload-pane" role="tabpanel">
-                <div class="mb-3">
-                  <label for="playlistFile" class="form-label">Arquivo da Playlist</label>
-                  <input type="file" class="form-control" id="playlistFile" accept=".m3u,.m3u8,.txt">
-                  <div class="form-text">Selecione um arquivo M3U, M3U8 ou TXT com sua playlist IPTV</div>
-                </div>
-                <div id="uploadProgress" class="progress mb-3" style="display: none;">
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                </div>
-              </div>
+            <div class="mb-3">
+              <label for="playlistUrl" class="form-label">URL da Playlist</label>
+              <input type="url" class="form-control" id="playlistUrl" placeholder="http://exemplo.com/get.php?username=user&password=pass&type=m3u_plus&output=ts">
+              <div class="form-text">Cole a URL completa da sua playlist IPTV</div>
             </div>
           </form>
         </div>
@@ -2285,6 +2254,9 @@
           this.loadWatchProgress();
           this.initPlayer();
           this.setupEventListeners();
+          
+          // Inicializar gerenciador de responsividade
+          this.responsiveManager = this.initResponsiveManager();
           
           await Promise.all([
             this.loadCategories(),
@@ -4236,290 +4208,142 @@
       async savePlaylist() {
         try {
           const urlInput = document.getElementById('playlistUrl').value.trim();
-          const fileInput = document.getElementById('playlistFile');
-          const uploadProgress = document.getElementById('uploadProgress');
-          const progressBar = uploadProgress.querySelector('.progress-bar');
           
-          // Verificar qual método está sendo usado
-          if (fileInput.files && fileInput.files.length > 0) {
-            // Processar arquivo de upload
-            const file = fileInput.files[0];
-            uploadProgress.style.display = 'block';
-            progressBar.style.width = '30%';
-            
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-              try {
-                progressBar.style.width = '60%';
-                const content = e.target.result;
-                
-                // Processar conteúdo M3U
-                await this.parseM3UFile(content);
-                
-                progressBar.style.width = '100%';
-                
-                const modal = bootstrap.Modal.getInstance(document.getElementById('playlistModal'));
-                modal.hide();
-                document.getElementById('playlistForm').reset();
-                uploadProgress.style.display = 'none';
-                progressBar.style.width = '0%';
-                
-                this.showSuccess('Playlist carregada com sucesso!');
-              } catch (error) {
-                uploadProgress.style.display = 'none';
-                progressBar.style.width = '0%';
-                throw error;
-              }
-            };
-            
-            reader.onerror = () => {
-              uploadProgress.style.display = 'none';
-              progressBar.style.width = '0%';
-              throw new Error('Erro ao ler o arquivo');
-            };
-            
-            reader.readAsText(file);
-            
-          } else if (urlInput) {
-            // Processar URL
-            const newConfig = this.extractPlaylistInfo(urlInput);
-            this.config = newConfig;
-            this.saveConfig();
-
-            const modal = bootstrap.Modal.getInstance(document.getElementById('playlistModal'));
-            modal.hide();
-            document.getElementById('playlistForm').reset();
-
-            // Clear cache when changing playlist
-            this.cache.clear();
-
-            await Promise.all([
-              this.loadCategories(),
-              this.loadMovieCategories(),
-              this.loadSeriesCategories()
-            ]);
-
-            this.showSuccess('Playlist adicionada com sucesso!');
-          } else {
-            this.showError('Por favor, insira uma URL ou selecione um arquivo');
+          if (!urlInput) {
+            this.showError('Por favor, insira uma URL válida');
+            return;
           }
+
+          // Processar URL
+          const newConfig = this.extractPlaylistInfo(urlInput);
+          this.config = newConfig;
+          this.saveConfig();
+
+          const modal = bootstrap.Modal.getInstance(document.getElementById('playlistModal'));
+          modal.hide();
+          document.getElementById('playlistForm').reset();
+
+          // Clear cache when changing playlist
+          this.cache.clear();
+
+          await Promise.all([
+            this.loadCategories(),
+            this.loadMovieCategories(),
+            this.loadSeriesCategories()
+          ]);
+
+          this.showSuccess('Playlist adicionada com sucesso!');
         } catch (error) {
           console.error('Erro ao salvar playlist:', error);
           this.showError(error.message);
         }
       }
       
-      async parseM3UFile(content) {
-        try {
-          const lines = content.split('\n');
-          const channels = [];
-          const movies = [];
-          const series = [];
-          const radios = [];
+      // Função de Responsividade Dinâmica
+      initResponsiveManager() {
+        const responsiveManager = {
+          currentBreakpoint: null,
+          breakpoints: {
+            mobile: 576,
+            tablet: 768,
+            desktop: 992,
+            wide: 1200
+          },
           
-          let currentItem = null;
-          
-          for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
+          detectBreakpoint() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const orientation = width > height ? 'landscape' : 'portrait';
             
-            if (line.startsWith('#EXTINF:')) {
-              // Extrair informações do item
-              const nameMatch = line.match(/,(.+)$/);
-              const groupMatch = line.match(/group-title="([^"]+)"/);
-              const logoMatch = line.match(/tvg-logo="([^"]+)"/);
-              const idMatch = line.match(/tvg-id="([^"]+)"/);
-              
-              currentItem = {
-                name: nameMatch ? nameMatch[1].trim() : 'Sem nome',
-                category: groupMatch ? groupMatch[1].trim() : 'Outros',
-                logo: logoMatch ? logoMatch[1].trim() : '',
-                id: idMatch ? idMatch[1].trim() : Date.now().toString()
-              };
-            } else if (line && !line.startsWith('#') && currentItem) {
-              // Esta linha contém a URL do stream
-              currentItem.url = line;
-              
-              // Determinar o tipo baseado na categoria ou URL
-              const lowerCategory = currentItem.category.toLowerCase();
-              const lowerName = currentItem.name.toLowerCase();
-              
-              if (lowerCategory.includes('filme') || lowerCategory.includes('movie') || 
-                  lowerName.includes('filme')) {
-                currentItem.type = 'movie';
-                movies.push({...currentItem});
-              } else if (lowerCategory.includes('série') || lowerCategory.includes('series') || 
-                         lowerName.includes('série') || lowerName.includes('s0')) {
-                currentItem.type = 'series';
-                series.push({...currentItem});
-              } else if (lowerCategory.includes('rádio') || lowerCategory.includes('radio') || 
-                         lowerName.includes('rádio') || lowerName.includes('fm')) {
-                currentItem.type = 'radio';
-                radios.push({...currentItem});
+            let breakpoint = 'mobile';
+            if (width >= this.breakpoints.wide) breakpoint = 'wide';
+            else if (width >= this.breakpoints.desktop) breakpoint = 'desktop';
+            else if (width >= this.breakpoints.tablet) breakpoint = 'tablet';
+            
+            return { breakpoint, width, height, orientation };
+          },
+          
+          adjustLayout() {
+            const { breakpoint, width, height, orientation } = this.detectBreakpoint();
+            
+            // Ajustes para mobile
+            if (breakpoint === 'mobile') {
+              if (orientation === 'landscape' && height < 500) {
+                document.documentElement.style.setProperty('--header-height', '40px');
+                document.documentElement.style.setProperty('--player-height', '35vh');
+                document.documentElement.style.setProperty('--content-height', '35vh');
               } else {
-                currentItem.type = 'channel';
-                channels.push({...currentItem});
+                document.documentElement.style.setProperty('--header-height', '56px');
+                document.documentElement.style.setProperty('--player-height', '45vh');
+                document.documentElement.style.setProperty('--content-height', '55vh');
               }
-              
-              currentItem = null;
             }
-          }
+            // Ajustes para tablet
+            else if (breakpoint === 'tablet') {
+              if (orientation === 'landscape') {
+                document.documentElement.style.setProperty('--player-width', '60%');
+                document.documentElement.style.setProperty('--content-width', '40%');
+              } else {
+                document.documentElement.style.setProperty('--player-height', '40vh');
+                document.documentElement.style.setProperty('--content-height', '60vh');
+              }
+            }
+            // Ajustes para desktop
+            else {
+              document.documentElement.style.setProperty('--player-width', '65%');
+              document.documentElement.style.setProperty('--content-width', '35%');
+            }
+            
+            // Atualizar breakpoint atual
+            if (this.currentBreakpoint !== breakpoint) {
+              this.currentBreakpoint = breakpoint;
+              console.log(`Breakpoint changed: ${breakpoint} (${orientation})`);
+              this.onBreakpointChange(breakpoint, orientation);
+            }
+          },
           
-          // Armazenar no cache local
-          this.uploadedPlaylist = {
-            channels,
-            movies,
-            series,
-            radios,
-            timestamp: Date.now()
-          };
+          onBreakpointChange(breakpoint, orientation) {
+            // Ajustar tamanhos de fonte dinamicamente
+            const root = document.documentElement;
+            if (breakpoint === 'mobile') {
+              root.style.fontSize = '14px';
+            } else if (breakpoint === 'tablet') {
+              root.style.fontSize = '15px';
+            } else {
+              root.style.fontSize = '16px';
+            }
+            
+            // Notificar mudança de layout
+            document.body.setAttribute('data-breakpoint', breakpoint);
+            document.body.setAttribute('data-orientation', orientation);
+          },
           
-          localStorage.setItem('uploadedPlaylist', JSON.stringify(this.uploadedPlaylist));
-          
-          // Atualizar interface
-          this.loadUploadedContent();
-          
-        } catch (error) {
-          throw new Error('Erro ao processar arquivo M3U: ' + error.message);
-        }
-      }
-      
-      loadUploadedContent() {
-        if (!this.uploadedPlaylist) {
-          const stored = localStorage.getItem('uploadedPlaylist');
-          if (stored) {
-            this.uploadedPlaylist = JSON.parse(stored);
-          } else {
-            return;
-          }
-        }
-        
-        // Carregar canais
-        if (this.uploadedPlaylist.channels.length > 0) {
-          this.displayUploadedChannels();
-        }
-        
-        // Carregar filmes
-        if (this.uploadedPlaylist.movies.length > 0) {
-          this.displayUploadedMovies();
-        }
-        
-        // Carregar séries
-        if (this.uploadedPlaylist.series.length > 0) {
-          this.displayUploadedSeries();
-        }
-        
-        // Carregar rádios
-        if (this.uploadedPlaylist.radios.length > 0) {
-          this.displayUploadedRadios();
-        }
-      }
-      
-      displayUploadedChannels() {
-        const categories = {};
-        this.uploadedPlaylist.channels.forEach(channel => {
-          if (!categories[channel.category]) {
-            categories[channel.category] = [];
-          }
-          categories[channel.category].push(channel);
-        });
-        
-        // Atualizar tabs de categorias
-        const tabBar = document.querySelector('#channelsContent .tab-bar');
-        if (tabBar) {
-          const tabNav = tabBar.querySelector('.tab-nav');
-          tabNav.innerHTML = Object.keys(categories).map(cat => 
-            `<button class="tab-btn" data-category="${cat}">${cat}</button>`
-          ).join('');
-          
-          // Adicionar eventos
-          tabNav.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-              tabNav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-              this.displayChannelsByCategory(categories[btn.dataset.category]);
+          init() {
+            // Ajustar layout inicial
+            this.adjustLayout();
+            
+            // Listener para resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+              clearTimeout(resizeTimeout);
+              resizeTimeout = setTimeout(() => {
+                this.adjustLayout();
+              }, 150);
             });
-          });
-          
-          // Ativar primeira categoria
-          if (tabNav.firstChild) {
-            tabNav.firstChild.classList.add('active');
-            this.displayChannelsByCategory(categories[Object.keys(categories)[0]]);
+            
+            // Listener para mudança de orientação
+            window.addEventListener('orientationchange', () => {
+              setTimeout(() => {
+                this.adjustLayout();
+              }, 100);
+            });
           }
-        }
-      }
-      
-      displayChannelsByCategory(channels) {
-        const container = document.getElementById('channelsList');
-        if (!container) return;
+        };
         
-        container.innerHTML = channels.map(channel => `
-          <div class="channel-item" data-id="${channel.id}">
-            <img src="${channel.logo || 'https://via.placeholder.com/50'}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/50'">
-            <div class="channel-info">
-              <div class="channel-name">${channel.name}</div>
-              <div class="channel-category">${channel.category}</div>
-            </div>
-          </div>
-        `).join('');
-        
-        // Adicionar eventos de clique
-        container.querySelectorAll('.channel-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const channel = channels.find(c => c.id === item.dataset.id);
-            if (channel) {
-              this.playUploadedChannel(channel);
-            }
-          });
-        });
+        responsiveManager.init();
+        return responsiveManager;
       }
-      
-      displayUploadedMovies() {
-        // Similar à displayUploadedChannels mas para filmes
-        const categories = {};
-        this.uploadedPlaylist.movies.forEach(movie => {
-          if (!categories[movie.category]) {
-            categories[movie.category] = [];
-          }
-          categories[movie.category].push(movie);
-        });
-        
-        // Implementação similar para filmes
-      }
-      
-      displayUploadedSeries() {
-        // Similar à displayUploadedChannels mas para séries
-      }
-      
-      displayUploadedRadios() {
-        // Similar à displayUploadedChannels mas para rádios
-      }
-      
-      playUploadedChannel(channel) {
-        this.currentChannel = channel;
-        this.currentChannelData = channel;
-        
-        // Tocar o canal
-        const video = document.getElementById('videoPlayer');
-        if (Hls.isSupported()) {
-          if (this.hls) {
-            this.hls.destroy();
-          }
-          this.hls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: true,
-            backBufferLength: 90
-          });
-          this.hls.loadSource(channel.url);
-          this.hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = channel.url;
-        }
-        
-        video.play().catch(e => console.error('Erro ao reproduzir:', e));
-        
-        // Ocultar visualização de rádio
-        document.querySelector('.radio-visual-display')?.classList.remove('active');
-      }
+
 
       extractPlaylistInfo(url) {
         try {
