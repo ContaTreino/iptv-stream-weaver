@@ -711,7 +711,7 @@
         flex-direction: column;
       }
       
-      .content-section {
+      .content-section-wrapper {
         flex: 1;
         overflow-y: auto;
         scrollbar-width: thin;
@@ -863,32 +863,32 @@
       </div>
 
       <!-- Content Section -->
-      <div class="content-section">
+      <div class="content-section-wrapper">
         <!-- Main Navigation -->
         <div class="main-nav">
           <ul class="nav nav-tabs" id="mainTabs" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" data-bs-toggle="tab" href="#channelsSection">
+              <a class="nav-link active" data-bs-toggle="tab" href="#channelsSection" onclick="app.switchSection('channels')">
                 <i class="fas fa-tv me-1"></i> Canais
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#moviesSection">
+              <a class="nav-link" data-bs-toggle="tab" href="#moviesSection" onclick="app.switchSection('movies')">
                 <i class="fas fa-film me-1"></i> Filmes
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#seriesSection">
+              <a class="nav-link" data-bs-toggle="tab" href="#seriesSection" onclick="app.switchSection('series')">
                 <i class="fas fa-video me-1"></i> Séries
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#radiosSection">
+              <a class="nav-link" data-bs-toggle="tab" href="#radiosSection" onclick="app.switchSection('radios')">
                 <i class="fas fa-radio me-1"></i> Rádios
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#favoritesSection">
+              <a class="nav-link" data-bs-toggle="tab" href="#favoritesSection" onclick="app.switchSection('favorites')">
                 <i class="fas fa-heart me-1"></i> Favoritos
               </a>
             </li>
@@ -973,8 +973,8 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <input type="text" class="form-control" id="searchInput" placeholder="Digite para buscar...">
-          <div id="searchResults" style="margin-top: 1rem;"></div>
+          <input type="text" class="form-control" id="searchInput" placeholder="Digite para buscar..." oninput="app.search(this.value)">
+          <div id="searchResults" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;"></div>
         </div>
       </div>
     </div>
@@ -991,10 +991,15 @@
         <div class="modal-body">
           <label for="playlistUrl" class="form-label">URL da Playlist M3U</label>
           <input type="text" class="form-control" id="playlistUrl" placeholder="http://exemplo.com/playlist.m3u">
+          <div class="mt-2">
+            <small class="text-secondary">Cole a URL da sua playlist M3U ou M3U8</small>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="savePlaylist()">Salvar</button>
+          <button type="button" class="btn btn-primary" onclick="app.loadPlaylistFromUrl()">
+            <span id="loadingBtn">Carregar</span>
+          </button>
         </div>
       </div>
     </div>
@@ -1027,7 +1032,6 @@
       document.body.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       
-      // Update active theme option
       document.querySelectorAll('.theme-option').forEach(option => {
         option.classList.remove('active');
         if (option.getAttribute('data-theme') === theme) {
@@ -1062,16 +1066,6 @@
       modal.show();
     }
 
-    function savePlaylist() {
-      const url = document.getElementById('playlistUrl').value;
-      if (url) {
-        localStorage.setItem('playlistUrl', url);
-        alert('Playlist salva com sucesso!');
-        bootstrap.Modal.getInstance(document.getElementById('playlistModal')).hide();
-        // Aqui você adicionaria a lógica para carregar a playlist
-      }
-    }
-
     // Error Handling
     function showError(message, details = '') {
       document.getElementById('errorMessage').textContent = message;
@@ -1087,8 +1081,17 @@
     class IPTVApp {
       constructor() {
         this.player = null;
+        this.hls = null;
         this.currentContent = null;
+        this.currentSection = 'channels';
+        this.currentCategory = 'Todos';
         this.favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        this.allContent = {
+          channels: [],
+          movies: [],
+          series: [],
+          radios: []
+        };
         this.init();
       }
 
@@ -1100,13 +1103,8 @@
       }
 
       initPlayer() {
-        this.player = videojs('videoPlayer', {
-          controls: true,
-          autoplay: false,
-          preload: 'auto',
-          fluid: true,
-          responsive: true
-        });
+        const video = document.getElementById('videoPlayer');
+        this.player = video;
       }
 
       initResponsiveManager() {
@@ -1126,39 +1124,297 @@
         updateLayout();
       }
 
-      loadSampleContent() {
-        // Exemplo de conteúdo de demonstração
-        const sampleChannels = [
-          { id: 1, name: 'Globo', category: 'Abertos', url: 'sample' },
-          { id: 2, name: 'SBT', category: 'Abertos', url: 'sample' },
-          { id: 3, name: 'Record', category: 'Abertos', url: 'sample' }
-        ];
+      async loadPlaylistFromUrl() {
+        const url = document.getElementById('playlistUrl').value.trim();
+        if (!url) {
+          showError('URL inválida', 'Por favor, insira uma URL válida');
+          return;
+        }
 
-        this.renderChannels(sampleChannels);
+        const loadingBtn = document.getElementById('loadingBtn');
+        loadingBtn.innerHTML = '<span class="loading-spinner"></span> Carregando...';
+
+        try {
+          const response = await fetch(url);
+          const text = await response.text();
+          this.parseM3U(text);
+          
+          localStorage.setItem('playlistUrl', url);
+          bootstrap.Modal.getInstance(document.getElementById('playlistModal')).hide();
+          loadingBtn.innerHTML = 'Carregar';
+          
+          this.renderCurrentSection();
+        } catch (error) {
+          console.error('Erro ao carregar playlist:', error);
+          showError('Erro ao carregar playlist', error.message);
+          loadingBtn.innerHTML = 'Carregar';
+        }
       }
 
-      renderChannels(channels) {
-        const channelList = document.getElementById('channelList');
-        channelList.innerHTML = channels.map(channel => `
-          <div class="content-item" onclick="app.playContent(${JSON.stringify(channel).replace(/"/g, '&quot;')})">
-            <div class="content-avatar">${channel.name.charAt(0)}</div>
-            <div class="content-info">
-              <div class="content-name">${channel.name}</div>
-              <div class="content-details">${channel.category}</div>
+      parseM3U(content) {
+        const lines = content.split('\n');
+        let currentItem = null;
+        const items = [];
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          
+          if (line.startsWith('#EXTINF:')) {
+            const nameMatch = line.match(/,(.+)$/);
+            const name = nameMatch ? nameMatch[1].trim() : 'Canal sem nome';
+            
+            const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+            const logo = logoMatch ? logoMatch[1] : '';
+            
+            const groupMatch = line.match(/group-title="([^"]+)"/);
+            const category = groupMatch ? groupMatch[1] : 'Outros';
+            
+            currentItem = {
+              id: Date.now() + Math.random(),
+              name: name,
+              category: category,
+              logo: logo,
+              url: ''
+            };
+          } else if (line && !line.startsWith('#') && currentItem) {
+            currentItem.url = line;
+            items.push(currentItem);
+            currentItem = null;
+          }
+        }
+
+        // Categorizar conteúdo
+        items.forEach(item => {
+          const nameLower = item.name.toLowerCase();
+          const categoryLower = item.category.toLowerCase();
+          
+          if (categoryLower.includes('movie') || categoryLower.includes('filme') || 
+              nameLower.includes('movie') || nameLower.includes('filme')) {
+            this.allContent.movies.push(item);
+          } else if (categoryLower.includes('series') || categoryLower.includes('série') ||
+                     nameLower.includes('s0') || nameLower.includes('temporada')) {
+            this.allContent.series.push(item);
+          } else if (categoryLower.includes('radio') || categoryLower.includes('rádio') ||
+                     nameLower.includes('radio') || nameLower.includes('fm')) {
+            this.allContent.radios.push(item);
+          } else {
+            this.allContent.channels.push(item);
+          }
+        });
+
+        console.log('Playlist carregada:', {
+          channels: this.allContent.channels.length,
+          movies: this.allContent.movies.length,
+          series: this.allContent.series.length,
+          radios: this.allContent.radios.length
+        });
+      }
+
+      loadSampleContent() {
+        // Canais de exemplo
+        this.allContent.channels = [
+          { id: 1, name: 'Globo HD', category: 'Abertos', url: 'https://sample-url.com', logo: 'https://i.ibb.co/sample1.png' },
+          { id: 2, name: 'SBT HD', category: 'Abertos', url: 'https://sample-url.com', logo: '' },
+          { id: 3, name: 'Record HD', category: 'Abertos', url: 'https://sample-url.com', logo: '' },
+          { id: 4, name: 'ESPN Brasil', category: 'Esportes', url: 'https://sample-url.com', logo: '' },
+          { id: 5, name: 'SporTV', category: 'Esportes', url: 'https://sample-url.com', logo: '' },
+          { id: 6, name: 'HBO', category: 'Filmes', url: 'https://sample-url.com', logo: '' },
+          { id: 7, name: 'Telecine Premium', category: 'Filmes', url: 'https://sample-url.com', logo: '' }
+        ];
+
+        // Filmes de exemplo
+        this.allContent.movies = [
+          { id: 101, name: 'Vingadores: Ultimato', category: 'Ação', url: 'https://sample-url.com', logo: '' },
+          { id: 102, name: 'O Poderoso Chefão', category: 'Drama', url: 'https://sample-url.com', logo: '' }
+        ];
+
+        // Séries de exemplo
+        this.allContent.series = [
+          { id: 201, name: 'Game of Thrones S01E01', category: 'Fantasia', url: 'https://sample-url.com', logo: '' },
+          { id: 202, name: 'Breaking Bad S01E01', category: 'Drama', url: 'https://sample-url.com', logo: '' }
+        ];
+
+        // Rádios de exemplo
+        this.allContent.radios = [
+          { id: 301, name: 'Jovem Pan FM', category: 'Notícias', url: 'https://sample-url.com', logo: '' },
+          { id: 302, name: 'Rádio Rock', category: 'Música', url: 'https://sample-url.com', logo: '' }
+        ];
+
+        this.renderCurrentSection();
+      }
+
+      switchSection(section) {
+        this.currentSection = section;
+        this.currentCategory = 'Todos';
+        this.renderCurrentSection();
+      }
+
+      renderCurrentSection() {
+        const content = this.allContent[this.currentSection] || [];
+        const categories = ['Todos', ...new Set(content.map(item => item.category))];
+        
+        // Renderizar categorias
+        const categoriesContainer = document.getElementById(`${this.currentSection}Categories`);
+        if (categoriesContainer) {
+          categoriesContainer.innerHTML = `
+            <div class="tab-nav">
+              ${categories.map(cat => `
+                <button class="tab-btn ${cat === this.currentCategory ? 'active' : ''}" 
+                        onclick="app.filterByCategory('${cat}')">
+                  ${cat}
+                </button>
+              `).join('')}
             </div>
-            <button class="favorite-btn" onclick="event.stopPropagation(); app.toggleFavorite(${channel.id})">
-              <i class="fas fa-heart"></i>
-            </button>
-          </div>
-        `).join('');
+          `;
+        }
+
+        // Renderizar lista
+        this.renderContentList(content);
+      }
+
+      filterByCategory(category) {
+        this.currentCategory = category;
+        this.renderCurrentSection();
+      }
+
+      renderContentList(items) {
+        const filteredItems = this.currentCategory === 'Todos' 
+          ? items 
+          : items.filter(item => item.category === this.currentCategory);
+
+        const listContainer = document.getElementById(`${this.currentSection}List`);
+        
+        if (!filteredItems.length) {
+          listContainer.innerHTML = `
+            <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+              <i class="fas fa-inbox" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
+              <p>Nenhum conteúdo encontrado</p>
+            </div>
+          `;
+          return;
+        }
+
+        listContainer.innerHTML = filteredItems.map(item => {
+          const isFavorite = this.favorites.includes(item.id);
+          const isPlaying = this.currentContent && this.currentContent.id === item.id;
+          
+          return `
+            <div class="content-item ${isPlaying ? 'playing' : ''}" onclick='app.playContent(${JSON.stringify(item).replace(/'/g, "\\'")})'>
+              <div class="content-avatar" ${item.logo ? `style="background-image: url('${item.logo}')"` : ''}>
+                ${!item.logo ? item.name.charAt(0).toUpperCase() : ''}
+              </div>
+              <div class="content-info">
+                <div class="content-name">${item.name}</div>
+                <div class="content-details">${item.category}</div>
+              </div>
+              ${isPlaying ? '<span class="playing-indicator">Tocando</span>' : ''}
+              <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="event.stopPropagation(); app.toggleFavorite(${item.id})">
+                <i class="fas fa-heart"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
       }
 
       playContent(content) {
+        console.log('Playing:', content);
         this.currentContent = content;
+        
+        // Esconder placeholder
         document.getElementById('videoPlaceholder').style.display = 'none';
         
-        // Aqui você adicionaria a lógica real de reprodução
-        console.log('Playing:', content);
+        // Verificar se é rádio
+        const isRadio = this.currentSection === 'radios';
+        
+        if (isRadio) {
+          this.playRadio(content);
+        } else {
+          this.playVideo(content);
+        }
+        
+        // Atualizar UI
+        this.renderCurrentSection();
+      }
+
+      playVideo(content) {
+        // Esconder display de rádio
+        document.getElementById('radioVisualDisplay').classList.remove('active');
+        document.getElementById('radioInfoOverlay').classList.remove('visible');
+        
+        const video = this.player;
+        
+        // Limpar HLS anterior
+        if (this.hls) {
+          this.hls.destroy();
+          this.hls = null;
+        }
+        
+        // Verificar se é stream HLS
+        if (content.url.includes('.m3u8')) {
+          if (Hls.isSupported()) {
+            this.hls = new Hls();
+            this.hls.loadSource(content.url);
+            this.hls.attachMedia(video);
+            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              video.play().catch(e => console.log('Autoplay bloqueado:', e));
+            });
+            this.hls.on(Hls.Events.ERROR, (event, data) => {
+              console.error('HLS Error:', data);
+              if (data.fatal) {
+                showError('Erro ao carregar stream', 'Não foi possível reproduzir este conteúdo');
+              }
+            });
+          } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = content.url;
+            video.addEventListener('loadedmetadata', () => {
+              video.play().catch(e => console.log('Autoplay bloqueado:', e));
+            });
+          }
+        } else {
+          video.src = content.url;
+          video.play().catch(e => console.log('Autoplay bloqueado:', e));
+        }
+      }
+
+      playRadio(content) {
+        // Mostrar display de rádio
+        document.getElementById('radioVisualDisplay').classList.add('active');
+        document.getElementById('radioInfoOverlay').classList.add('visible');
+        
+        // Atualizar informações da rádio
+        const logo = content.logo || 'https://via.placeholder.com/200?text=' + content.name.charAt(0);
+        
+        document.getElementById('radioMainImage').src = logo;
+        document.getElementById('radioMainName').textContent = content.name;
+        document.getElementById('radioMainFrequency').textContent = content.category;
+        document.getElementById('radioBackground').style.backgroundImage = `url('${logo}')`;
+        
+        document.getElementById('radioLogoSmall').src = logo;
+        document.getElementById('radioNameOverlay').textContent = content.name;
+        document.getElementById('radioFrequencyOverlay').textContent = content.category;
+        
+        // Reproduzir áudio
+        const video = this.player;
+        
+        // Limpar HLS anterior
+        if (this.hls) {
+          this.hls.destroy();
+          this.hls = null;
+        }
+        
+        if (content.url.includes('.m3u8')) {
+          if (Hls.isSupported()) {
+            this.hls = new Hls();
+            this.hls.loadSource(content.url);
+            this.hls.attachMedia(video);
+            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              video.play().catch(e => console.log('Autoplay bloqueado:', e));
+            });
+          }
+        } else {
+          video.src = content.url;
+          video.play().catch(e => console.log('Autoplay bloqueado:', e));
+        }
       }
 
       toggleFavorite(id) {
@@ -1169,12 +1425,94 @@
           this.favorites.push(id);
         }
         localStorage.setItem('favorites', JSON.stringify(this.favorites));
-        this.updateFavoritesUI();
+        
+        // Atualizar UI
+        this.renderCurrentSection();
+        this.updateFavoritesList();
       }
 
-      updateFavoritesUI() {
-        // Atualizar visual dos favoritos
-        console.log('Favorites updated');
+      updateFavoritesList() {
+        const favoritesList = document.getElementById('favoritesList');
+        const allItems = [
+          ...this.allContent.channels,
+          ...this.allContent.movies,
+          ...this.allContent.series,
+          ...this.allContent.radios
+        ];
+        
+        const favoriteItems = allItems.filter(item => this.favorites.includes(item.id));
+        
+        if (!favoriteItems.length) {
+          favoritesList.innerHTML = `
+            <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+              <i class="fas fa-heart" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
+              <p>Nenhum favorito ainda</p>
+            </div>
+          `;
+          return;
+        }
+        
+        favoritesList.innerHTML = favoriteItems.map(item => {
+          const isPlaying = this.currentContent && this.currentContent.id === item.id;
+          
+          return `
+            <div class="content-item ${isPlaying ? 'playing' : ''}" onclick='app.playContent(${JSON.stringify(item).replace(/'/g, "\\'")})'>
+              <div class="content-avatar" ${item.logo ? `style="background-image: url('${item.logo}')"` : ''}>
+                ${!item.logo ? item.name.charAt(0).toUpperCase() : ''}
+              </div>
+              <div class="content-info">
+                <div class="content-name">${item.name}</div>
+                <div class="content-details">${item.category}</div>
+              </div>
+              ${isPlaying ? '<span class="playing-indicator">Tocando</span>' : ''}
+              <button class="favorite-btn active" onclick="event.stopPropagation(); app.toggleFavorite(${item.id})">
+                <i class="fas fa-heart"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      search(query) {
+        const searchResults = document.getElementById('searchResults');
+        
+        if (!query.trim()) {
+          searchResults.innerHTML = '';
+          return;
+        }
+        
+        const allItems = [
+          ...this.allContent.channels,
+          ...this.allContent.movies,
+          ...this.allContent.series,
+          ...this.allContent.radios
+        ];
+        
+        const results = allItems.filter(item => 
+          item.name.toLowerCase().includes(query.toLowerCase()) ||
+          item.category.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        if (!results.length) {
+          searchResults.innerHTML = `
+            <div style="padding: 1rem; text-align: center; color: var(--text-secondary);">
+              <p>Nenhum resultado encontrado</p>
+            </div>
+          `;
+          return;
+        }
+        
+        searchResults.innerHTML = results.map(item => `
+          <div class="content-item" onclick='app.playContent(${JSON.stringify(item).replace(/'/g, "\\'")})'>
+            <div class="content-avatar" ${item.logo ? `style="background-image: url('${item.logo}')"` : ''}>
+              ${!item.logo ? item.name.charAt(0).toUpperCase() : ''}
+            </div>
+            <div class="content-info">
+              <div class="content-name">${item.name}</div>
+              <div class="content-details">${item.category}</div>
+            </div>
+          </div>
+        `).join('');
       }
     }
 
