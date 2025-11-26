@@ -174,6 +174,24 @@
       transform: scale(1.05);
     }
     
+    .player-logo.animate-center {
+      bottom: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, 50%) scale(2);
+      opacity: 1;
+      z-index: 200;
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .player-logo.animate-to-position {
+      bottom: 70px !important;
+      right: 15px !important;
+      transform: none;
+      opacity: 0.85;
+      z-index: 100;
+      transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
     /* Radio Info Overlay */
     .radio-info-overlay {
       position: absolute;
@@ -363,6 +381,36 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
+
+    /* Custom Controls */
+    .custom-controls {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      display: none;
+      justify-content: center;
+      gap: 10px;
+      z-index: 150;
+    }
+    .control-btn {
+      background: rgba(0,0,0,0.7);
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.8rem;
+    }
+    .control-btn:hover {
+      background: rgba(0,0,0,0.9);
+      transform: scale(1.05);
+    }
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     
     /* Main Navigation Tabs - Estilo Tele Latino */
     .main-nav {
@@ -539,6 +587,17 @@
       font-size: clamp(0.7rem, 2.5vw, 0.85rem);
       color: var(--text-secondary);
     }
+
+    .progress-indicator {
+      background: #FFA500;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-top: 0.25rem;
+      display: inline-block;
+    }
     
     .playing-indicator {
       background: var(--primary-gradient);
@@ -569,6 +628,48 @@
     
     .favorite-btn.active {
       color: var(--primary-color);
+    }
+
+    /* Search Results */
+    .search-results {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .search-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--bg-quaternary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .search-item:hover {
+      background-color: var(--bg-quaternary);
+    }
+    .search-item .item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      margin-right: 1rem;
+      font-size: 0.9rem;
+    }
+    .search-item .item-info {
+      flex: 1;
+    }
+    .search-item .item-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+    .search-item .item-type {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
     }
     
     /* Modals */
@@ -619,6 +720,375 @@
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(255,107,53,0.4);
+    }
+
+    /* Continue Modal */
+    .continue-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .continue-content {
+      background: var(--bg-tertiary);
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .continue-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .continue-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .continue-btn.primary {
+      background: var(--primary-color);
+      color: white;
+    }
+    .continue-btn.secondary {
+      background: #6B7280;
+      color: white;
+    }
+    .continue-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Games Carousel */
+    .games-carousel {
+      overflow: hidden;
+      white-space: nowrap;
+      background-color: transparent;
+      padding: 0.2rem 1rem;
+      max-width: 40%;
+    }
+    .games-scroll {
+      display: inline-block;
+      animation: scroll 35s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    .content-section {
+      display: none;
+    }
+    .content-section.active {
+      display: block;
+    }
+    
+    /* Favorites horizontal scroll styles */
+    .favorites-horizontal-scroll {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-color) transparent;
+      gap: 1rem;
+      padding: 1rem;
+      min-height: 200px;
+    }
+
+    .favorites-horizontal-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .favorites-horizontal-scroll::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 4px;
+    }
+
+    .favorites-horizontal-scroll::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 4px;
+    }
+
+    .favorites-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-color);
+    }
+
+    .favorite-card {
+      flex: 0 0 300px;
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .favorite-card:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .favorite-card .favorite-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .favorite-card .favorite-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-gradient);
+      color: white;
+      font-weight: bold;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .favorite-card .favorite-info h6 {
+      margin: 0 0 0.25rem 0;
+      color: var(--text-primary);
+      font-weight: 600;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .favorite-card .favorite-info small {
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .favorite-card .favorite-actions {
+      margin-top: auto;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .favorite-card .play-btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .favorite-card .play-btn:hover {
+      background: var(--accent-color);
+      transform: scale(1.05);
+    }
+
+    .favorite-card .remove-favorite {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .favorite-card .remove-favorite:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .favorites-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-secondary);
+    }
+
+    .favorites-empty i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .favorites-header {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: var(--bg-secondary);
+    }
+
+    .favorites-header h4 {
+      margin: 0;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    @media (max-width: 768px) {
+      .favorite-card {
+        flex: 0 0 280px;
+      }
+      
+      .favorites-horizontal-scroll {
+        padding: 0.75rem;
+      }
+    }
+
+    /* Episodes */
+    .episode-list {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+      background-color: var(--bg-tertiary);
+      max-height: 60vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .episode-back-button {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--bg-quaternary);
+      margin: -1rem -1rem 1rem -1rem;
+    }
+    
+    .episode-card {
+      background: var(--bg-quaternary);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    .episode-card:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+    .episode-card.current {
+      border-color: var(--primary-color);
+      background: rgba(255,107,53,0.1);
+    }
+    .episode-number {
+      font-size: 0.8rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .episode-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .episode-info {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Episode Navigation Overlay */
+    .episode-nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .episode-nav-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .episode-nav-content {
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 90%;
+      width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .episode-nav-title {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .episode-nav-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .episode-nav-list {
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .episode-nav-item {
+      display: block;
+      width: 100%;
+      background: var(--bg-quaternary);
+      border: none;
+      color: white;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .episode-nav-item:hover {
+      background: #555;
+    }
+    .episode-nav-item.current {
+      background: var(--primary-color);
     }
     
     /* Theme Modal */
@@ -682,6 +1152,62 @@
     .theme-claro { color: #FF6B35; }
     .theme-azul { color: #2196F3; }
     .theme-vermelho { color: #E74C3C; }
+
+    /* Error Overlay */
+    .error-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    
+    .error-content {
+      background: var(--bg-tertiary);
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    
+    .retry-btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0.5rem;
+    }
+    
+    .retry-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,107,53,0.4);
+    }
+    
+    /* Loading Spinner */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
     
     /* Responsive - Landscape Mode */
     @media (orientation: landscape) and (min-width: 768px) {
@@ -732,70 +1258,6 @@
         width: clamp(45px, 10vw, 70px);
       }
     }
-    
-    .content-section {
-      display: none;
-    }
-    
-    .content-section.active {
-      display: block;
-    }
-    
-    /* Loading Spinner */
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: var(--primary-color);
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* Error Overlay */
-    .error-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    
-    .error-content {
-      background: var(--bg-tertiary);
-      padding: 2rem;
-      border-radius: 16px;
-      text-align: center;
-      max-width: 90%;
-      width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    }
-    
-    .retry-btn {
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 0.5rem;
-    }
-    
-    .retry-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255,107,53,0.4);
-    }
   </style>
 </head>
 <body data-theme="verde">
@@ -804,16 +1266,19 @@
     <div class="header d-flex justify-content-between align-items-center">
       <h1><i class="fas fa-tv me-2"></i>IPTV Player</h1>
       <div class="header-buttons">
-        <button class="header-btn" onclick="openThemeModal()" title="Temas">
+        <button class="header-btn" id="themeBtn" title="Temas">
           <i class="fas fa-palette"></i>
         </button>
-        <button class="header-btn" onclick="toggleFullscreen()" title="Tela Cheia">
+        <button class="header-btn" id="shareBtn" title="Compartilhar">
+          <i class="fas fa-share-alt"></i>
+        </button>
+        <button class="header-btn" onclick="document.documentElement.requestFullscreen()" title="Tela Cheia">
           <i class="fas fa-expand"></i>
         </button>
-        <button class="header-btn" onclick="openSearchModal()" title="Buscar">
+        <button class="header-btn" id="searchBtn" title="Buscar">
           <i class="fas fa-search"></i>
         </button>
-        <button class="header-btn" onclick="openPlaylistModal()" title="Adicionar Playlist">
+        <button class="header-btn" id="addPlaylistBtn" title="Adicionar Playlist">
           <i class="fas fa-plus-circle"></i>
         </button>
       </div>
@@ -823,10 +1288,10 @@
       <!-- Video Section -->
       <div class="video-section">
         <div class="video-container">
-          <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto"></video>
+          <video id="videoPlayer" class="video-js" controls preload="auto"></video>
           
           <!-- Logo SEMPRE dentro do player -->
-          <img src="https://i.ibb.co/wYHRkPj/Text-Toos-Apk.png" class="player-logo" alt="Logo">
+          <img src="https://i.ibb.co/wYHRkPj/Text-Toos-Apk.png" class="player-logo" id="playerLogo" alt="Logo">
           
           <!-- Radio Info Overlay -->
           <div class="radio-info-overlay" id="radioInfoOverlay">
@@ -859,74 +1324,125 @@
             <i class="fas fa-play-circle"></i>
             <p style="margin-top: 1rem; font-size: clamp(0.9rem, 3vw, 1.1rem); opacity: 0.8;">Selecione um conteúdo para assistir</p>
           </div>
+
+          <!-- Custom Controls -->
+          <div class="custom-controls" id="customControls">
+            <button class="control-btn" id="episodeListBtn">
+              <i class="fas fa-list"></i> Episódios
+            </button>
+            <button class="control-btn" id="prevEpisodeBtn">
+              <i class="fas fa-step-backward"></i> Anterior
+            </button>
+            <button class="control-btn" id="nextEpisodeBtn">
+              Próximo <i class="fas fa-step-forward"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Navigation -->
+        <div class="main-nav">
+          <ul class="nav nav-tabs d-flex justify-content-center">
+            <li class="nav-item">
+              <button class="nav-link active" data-content="channels">
+                <i class="fas fa-tv me-1"></i>Canais
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-content="movies">
+                <i class="fas fa-film me-1"></i>Filmes
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-content="series">
+                <i class="fas fa-video me-1"></i>Séries
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-content="radios">
+                <i class="fas fa-radio me-1"></i>Rádios
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-content="favorites">
+                <i class="fas fa-heart me-1"></i>Favoritos
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
 
       <!-- Content Section -->
       <div class="content-section-wrapper">
-        <!-- Main Navigation -->
-        <div class="main-nav">
-          <ul class="nav nav-tabs" id="mainTabs" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" data-bs-toggle="tab" href="#channelsSection" onclick="app.switchSection('channels')">
-                <i class="fas fa-tv me-1"></i> Canais
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#moviesSection" onclick="app.switchSection('movies')">
-                <i class="fas fa-film me-1"></i> Filmes
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#seriesSection" onclick="app.switchSection('series')">
-                <i class="fas fa-video me-1"></i> Séries
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#radiosSection" onclick="app.switchSection('radios')">
-                <i class="fas fa-radio me-1"></i> Rádios
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="tab" href="#favoritesSection" onclick="app.switchSection('favorites')">
-                <i class="fas fa-heart me-1"></i> Favoritos
-              </a>
-            </li>
-          </ul>
+        <!-- Games Carousel -->
+        <div class="games-carousel">
+          <div class="games-scroll" id="gamesScroll"></div>
         </div>
 
-        <div class="tab-content">
-          <!-- Channels Section -->
-          <div class="tab-pane fade show active content-section active" id="channelsSection">
-            <div class="tab-bar" id="channelCategories"></div>
-            <div class="content-list" id="channelList"></div>
+        <!-- Channels Section -->
+        <div id="channelsSection" class="content-section active">
+          <div class="tab-bar">
+            <div class="tab-nav" id="channelTabNav"></div>
           </div>
-
-          <!-- Movies Section -->
-          <div class="tab-pane fade content-section" id="moviesSection">
-            <div class="tab-bar" id="movieCategories"></div>
-            <div class="content-list" id="movieList"></div>
+          <div class="content-list" id="channelList">
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando canais...</p>
+            </div>
           </div>
+        </div>
 
-          <!-- Series Section -->
-          <div class="tab-pane fade content-section" id="seriesSection">
-            <div class="tab-bar" id="seriesCategories"></div>
-            <div class="content-list" id="seriesList"></div>
+        <!-- Movies Section -->
+        <div id="moviesSection" class="content-section">
+          <div class="tab-bar">
+            <div class="tab-nav" id="movieTabNav"></div>
           </div>
-
-          <!-- Radios Section -->
-          <div class="tab-pane fade content-section" id="radiosSection">
-            <div class="tab-bar" id="radioCategories"></div>
-            <div class="content-list" id="radioList"></div>
+          <div class="content-list" id="movieList">
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando filmes...</p>
+            </div>
           </div>
+        </div>
 
-          <!-- Favorites Section -->
-          <div class="tab-pane fade content-section" id="favoritesSection">
-            <div class="content-list" id="favoritesList">
-              <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
-                <i class="fas fa-heart" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
-                <p>Nenhum favorito ainda</p>
-              </div>
+        <!-- Series Section -->
+        <div id="seriesSection" class="content-section">
+          <div class="tab-bar">
+            <div class="tab-nav" id="seriesTabNav"></div>
+          </div>
+          <div class="content-list" id="seriesList">
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando séries...</p>
+            </div>
+          </div>
+          <div class="episode-list" id="episodeList"></div>
+        </div>
+
+        <!-- Radios Section -->
+        <div id="radiosSection" class="content-section">
+          <div class="tab-bar">
+            <div class="tab-nav" id="radioTabNav">
+              <button class="tab-btn active" data-category="all">Todas</button>
+            </div>
+          </div>
+          <div class="content-list" id="radioList">
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando rádios...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Favorites Section -->
+        <div id="favoritesSection" class="content-section">
+          <div class="favorites-header">
+            <h4><i class="fas fa-heart me-2"></i>Meus Favoritos</h4>
+          </div>
+          <div class="favorites-horizontal-scroll" id="favoritesList">
+            <div class="favorites-empty">
+              <i class="fas fa-heart"></i>
+              <h5>Nenhum favorito ainda</h5>
+              <p>Toque no ❤️ para adicionar!</p>
             </div>
           </div>
         </div>
@@ -964,6 +1480,15 @@
     </div>
   </div>
 
+  <!-- Episode Navigation Overlay -->
+  <div class="episode-nav-overlay" id="episodeNavOverlay">
+    <div class="episode-nav-content">
+      <button class="episode-nav-close" id="episodeNavClose">×</button>
+      <h4 class="episode-nav-title" id="episodeNavTitle">Episódios</h4>
+      <div class="episode-nav-list" id="episodeNavList"></div>
+    </div>
+  </div>
+
   <!-- Search Modal -->
   <div class="modal fade" id="searchModal" tabindex="-1">
     <div class="modal-dialog">
@@ -973,14 +1498,29 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <input type="text" class="form-control" id="searchInput" placeholder="Digite para buscar..." oninput="app.search(this.value)">
-          <div id="searchResults" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;"></div>
+          <input type="text" class="form-control mb-3" id="searchInput" placeholder="Digite para buscar...">
+          <div class="form-check-inline mb-3">
+            <input class="form-check-input" type="checkbox" id="searchChannels" checked>
+            <label class="form-check-label me-3" for="searchChannels">Canais</label>
+            <input class="form-check-input" type="checkbox" id="searchMovies" checked>
+            <label class="form-check-label me-3" for="searchMovies">Filmes</label>
+            <input class="form-check-input" type="checkbox" id="searchSeries" checked>
+            <label class="form-check-label me-3" for="searchSeries">Séries</label>
+            <input class="form-check-input" type="checkbox" id="searchRadios" checked>
+            <label class="form-check-label" for="searchRadios">Rádios</label>
+          </div>
+          <div class="search-results" id="searchResults">
+            <div class="text-center">
+              <i class="fas fa-search fa-2x mb-2" style="color: #666;"></i>
+              <p>Digite algo para buscar</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Playlist Modal -->
+  <!-- Add Playlist Modal -->
   <div class="modal fade" id="playlistModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -989,18 +1529,30 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <label for="playlistUrl" class="form-label">URL da Playlist M3U</label>
-          <input type="text" class="form-control" id="playlistUrl" placeholder="http://exemplo.com/playlist.m3u">
-          <div class="mt-2">
-            <small class="text-secondary">Cole a URL da sua playlist M3U ou M3U8</small>
-          </div>
+          <form id="playlistForm">
+            <div class="mb-3">
+              <label for="playlistUrl" class="form-label">URL da Playlist</label>
+              <input type="url" class="form-control" id="playlistUrl" placeholder="http://exemplo.com/get.php?username=user&password=pass&type=m3u_plus&output=ts" required>
+              <div class="form-text" style="color: var(--text-secondary);">Cole a URL completa da sua playlist IPTV</div>
+            </div>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="app.loadPlaylistFromUrl()">
-            <span id="loadingBtn">Carregar</span>
-          </button>
+          <button type="button" class="btn btn-primary" id="savePlaylistBtn">Salvar</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Continue Watching Modal -->
+  <div class="continue-modal" id="continueModal">
+    <div class="continue-content">
+      <h4 class="mb-3">Continuar Assistindo?</h4>
+      <p id="continueMessage">Você tem progresso salvo neste conteúdo</p>
+      <div class="continue-buttons">
+        <button class="continue-btn primary" id="continueYes">Continuar</button>
+        <button class="continue-btn secondary" id="continueNo">Do Início</button>
       </div>
     </div>
   </div>
@@ -1008,20 +1560,22 @@
   <!-- Error Overlay -->
   <div class="error-overlay" id="errorOverlay">
     <div class="error-content">
-      <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-      <h4 id="errorMessage">Erro ao carregar</h4>
-      <p id="errorDetails" style="color: var(--text-secondary); margin-top: 0.5rem;"></p>
-      <button class="retry-btn" onclick="closeError()">Fechar</button>
+      <i class="fas fa-exclamation-triangle fa-3x mb-3" style="color: #EF4444;"></i>
+      <h4 class="mb-3">Erro de Conexão</h4>
+      <p id="errorMessage">Ocorreu um erro ao carregar o conteúdo</p>
+      <button class="retry-btn" id="retryBtn">Tentar Novamente</button>
+      <button class="retry-btn" style="background: #6B7280;" id="closeErrorBtn">Fechar</button>
     </div>
   </div>
-
-  <!-- Scripts -->
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+
   <script>
     // Theme Functions
     function openThemeModal() {
       document.getElementById('themeModal').style.display = 'flex';
+      updateActiveTheme();
     }
 
     function closeThemeModal() {
@@ -1030,51 +1584,100 @@
 
     function changeTheme(theme) {
       document.body.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-      
+      localStorage.setItem('iptv-theme', theme);
+      updateActiveTheme();
+    }
+
+    function updateActiveTheme() {
+      const currentTheme = document.body.getAttribute('data-theme') || 'verde';
       document.querySelectorAll('.theme-option').forEach(option => {
         option.classList.remove('active');
-        if (option.getAttribute('data-theme') === theme) {
+        if (option.dataset.theme === currentTheme) {
           option.classList.add('active');
         }
       });
     }
 
     function loadTheme() {
-      const savedTheme = localStorage.getItem('theme') || 'verde';
-      changeTheme(savedTheme);
+      const savedTheme = localStorage.getItem('iptv-theme') || 'verde';
+      document.body.setAttribute('data-theme', savedTheme);
     }
 
-    // Fullscreen
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
+    // Favorites Backend Class
+    class FavoritesBackend {
+      constructor() {
+        this.favorites = new Map();
+        this.syncInterval = null;
+        this.lastSync = 0;
+        this.loadFromStorage();
+        this.startAutoSync();
       }
-    }
 
-    // Search Modal
-    function openSearchModal() {
-      const modal = new bootstrap.Modal(document.getElementById('searchModal'));
-      modal.show();
-    }
+      loadFromStorage() {
+        try {
+          const saved = localStorage.getItem('iptv-favorites-v2');
+          if (saved) {
+            const data = JSON.parse(saved);
+            this.favorites = new Map(data.favorites || []);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar favoritos:', error);
+        }
+      }
 
-    // Playlist Modal
-    function openPlaylistModal() {
-      const modal = new bootstrap.Modal(document.getElementById('playlistModal'));
-      modal.show();
-    }
+      saveToStorage() {
+        try {
+          const data = {
+            favorites: Array.from(this.favorites.entries()),
+            lastSync: Date.now()
+          };
+          localStorage.setItem('iptv-favorites-v2', JSON.stringify(data));
+          this.lastSync = Date.now();
+        } catch (error) {
+          console.error('Erro ao salvar favoritos:', error);
+        }
+      }
 
-    // Error Handling
-    function showError(message, details = '') {
-      document.getElementById('errorMessage').textContent = message;
-      document.getElementById('errorDetails').textContent = details;
-      document.getElementById('errorOverlay').style.display = 'flex';
-    }
+      startAutoSync() {
+        this.syncInterval = setInterval(() => {
+          if (Date.now() - this.lastSync > 5000) {
+            this.saveToStorage();
+          }
+        }, 5000);
+      }
 
-    function closeError() {
-      document.getElementById('errorOverlay').style.display = 'none';
+      addFavorite(id, itemData) {
+        this.favorites.set(id, {
+          ...itemData,
+          favoriteDate: Date.now(),
+          lastAccessed: Date.now()
+        });
+        this.saveToStorage();
+      }
+
+      removeFavorite(id) {
+        this.favorites.delete(id);
+        this.saveToStorage();
+      }
+
+      isFavorite(id) {
+        return this.favorites.has(id);
+      }
+
+      getFavorites() {
+        return Array.from(this.favorites.values()).sort((a, b) => 
+          b.lastAccessed - a.lastAccessed
+        );
+      }
+
+      updateLastAccessed(id) {
+        const fav = this.favorites.get(id);
+        if (fav) {
+          fav.lastAccessed = Date.now();
+          this.favorites.set(id, fav);
+          this.saveToStorage();
+        }
+      }
     }
 
     // IPTV App Class
@@ -1084,14 +1687,40 @@
         this.hls = null;
         this.currentContent = null;
         this.currentSection = 'channels';
-        this.currentCategory = 'Todos';
-        this.favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        this.allContent = {
-          channels: [],
-          movies: [],
-          series: [],
-          radios: []
+        this.activeContent = 'channels';
+        this.currentChannel = null;
+        this.currentMovie = null;
+        this.currentSeries = null;
+        this.currentEpisode = null;
+        this.currentRadio = null;
+        this.currentEpisodeIndex = -1;
+        this.currentCategory = null;
+        this.currentMovieCategory = null;
+        this.currentSeriesCategory = null;
+        this.activeRadioCategory = 'all';
+        this.favorites = new Set();
+        this.favoritesBackend = new FavoritesBackend();
+        this.watchProgress = new Map();
+        this.cache = new Map();
+        this.cacheExpiration = 30 * 60 * 1000;
+        this.retryAttempts = 3;
+        this.retryDelay = 2000;
+        this.config = {
+          server: '',
+          username: '',
+          password: ''
         };
+        this.channels = [];
+        this.movies = [];
+        this.series = [];
+        this.radios = [];
+        this.episodes = [];
+        this.categories = [];
+        this.movieCategories = [];
+        this.seriesCategories = [];
+        this.allContent = [];
+        this.pendingContinueAction = null;
+        this.pendingRetryAction = null;
         this.init();
       }
 
@@ -1099,7 +1728,26 @@
         loadTheme();
         this.initPlayer();
         this.initResponsiveManager();
-        this.loadSampleContent();
+        this.loadConfig();
+        this.loadFavorites();
+        this.loadWatchProgress();
+        this.setupEventListeners();
+        this.loadGames();
+        
+        if (this.config.server && this.config.username && this.config.password) {
+          Promise.all([
+            this.loadCategories(),
+            this.loadMovieCategories(),
+            this.loadSeriesCategories()
+          ]).catch(error => {
+            console.error('Erro ao carregar dados iniciais:', error);
+          });
+        } else {
+          this.loadSampleContent();
+        }
+
+        // Auto-save watch progress
+        setInterval(() => this.saveWatchProgress(), 10000);
       }
 
       initPlayer() {
@@ -1124,403 +1772,1552 @@
         updateLayout();
       }
 
-      async loadPlaylistFromUrl() {
-        const url = document.getElementById('playlistUrl').value.trim();
-        if (!url) {
-          showError('URL inválida', 'Por favor, insira uma URL válida');
-          return;
-        }
+      animateLogo() {
+        const logo = document.getElementById('playerLogo');
+        if (!logo) return;
 
-        const loadingBtn = document.getElementById('loadingBtn');
-        loadingBtn.innerHTML = '<span class="loading-spinner"></span> Carregando...';
+        // Adiciona classe para animar para o centro
+        logo.classList.remove('animate-to-position');
+        logo.classList.add('animate-center');
 
-        try {
-          const response = await fetch(url);
-          const text = await response.text();
-          this.parseM3U(text);
+        // Após 1 segundo, anima para a posição final
+        setTimeout(() => {
+          logo.classList.remove('animate-center');
+          logo.classList.add('animate-to-position');
           
-          localStorage.setItem('playlistUrl', url);
-          bootstrap.Modal.getInstance(document.getElementById('playlistModal')).hide();
-          loadingBtn.innerHTML = 'Carregar';
-          
-          this.renderCurrentSection();
-        } catch (error) {
-          console.error('Erro ao carregar playlist:', error);
-          showError('Erro ao carregar playlist', error.message);
-          loadingBtn.innerHTML = 'Carregar';
+          // Remove classes após a animação
+          setTimeout(() => {
+            logo.classList.remove('animate-to-position');
+          }, 1200);
+        }, 1000);
+      }
+
+      showRadioInfo() {
+        document.getElementById('radioInfoOverlay').classList.add('visible');
+      }
+
+      hideRadioInfo() {
+        document.getElementById('radioInfoOverlay').classList.remove('visible');
+      }
+
+      showRadioVisualDisplay() {
+        document.getElementById('radioVisualDisplay').classList.add('active');
+      }
+
+      hideRadioVisualDisplay() {
+        document.getElementById('radioVisualDisplay').classList.remove('active');
+      }
+
+      setupEventListeners() {
+        // Theme button
+        document.getElementById('themeBtn').addEventListener('click', openThemeModal);
+
+        // Share button
+        document.getElementById('shareBtn').addEventListener('click', () => this.shareApp());
+
+        // Search button
+        document.getElementById('searchBtn').addEventListener('click', () => {
+          const modal = new bootstrap.Modal(document.getElementById('searchModal'));
+          modal.show();
+        });
+
+        // Search input
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+          this.performSearch(e.target.value);
+        });
+
+        // Add playlist button
+        document.getElementById('addPlaylistBtn').addEventListener('click', () => {
+          const modal = new bootstrap.Modal(document.getElementById('playlistModal'));
+          modal.show();
+        });
+
+        // Save playlist button
+        document.getElementById('savePlaylistBtn').addEventListener('click', () => this.savePlaylist());
+
+        // Main navigation
+        document.querySelectorAll('.main-nav .nav-link').forEach(link => {
+          link.addEventListener('click', () => {
+            document.querySelectorAll('.main-nav .nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            
+            const content = link.dataset.content;
+            this.activeContent = content;
+            this.showContentSection(content);
+          });
+        });
+
+        // Episode controls
+        document.getElementById('episodeListBtn').addEventListener('click', () => this.toggleEpisodeNavigation());
+        document.getElementById('prevEpisodeBtn').addEventListener('click', () => this.playPreviousEpisode());
+        document.getElementById('nextEpisodeBtn').addEventListener('click', () => this.playNextEpisode());
+
+        // Episode navigation close
+        document.getElementById('episodeNavClose').addEventListener('click', () => this.hideEpisodeNavigation());
+
+        // Continue watching modal
+        document.getElementById('continueYes').addEventListener('click', () => {
+          document.getElementById('continueModal').style.display = 'none';
+          if (this.pendingContinueAction) {
+            this.pendingContinueAction.continue();
+          }
+        });
+
+        document.getElementById('continueNo').addEventListener('click', () => {
+          document.getElementById('continueModal').style.display = 'none';
+          if (this.pendingContinueAction) {
+            this.pendingContinueAction.restart();
+          }
+        });
+
+        // Error overlay
+        document.getElementById('retryBtn').addEventListener('click', () => {
+          document.getElementById('errorOverlay').style.display = 'none';
+          if (this.pendingRetryAction) {
+            this.pendingRetryAction();
+          }
+        });
+
+        document.getElementById('closeErrorBtn').addEventListener('click', () => {
+          document.getElementById('errorOverlay').style.display = 'none';
+        });
+      }
+
+      showContentSection(contentType) {
+        document.querySelectorAll('.content-section').forEach(section => {
+          section.classList.remove('active');
+        });
+        
+        if (contentType === 'favorites') {
+          document.getElementById('favoritesSection').classList.add('active');
+          this.activeContent = 'favorites';
+          this.renderFavorites();
+        } else {
+          document.getElementById(`${contentType}Section`).classList.add('active');
         }
       }
 
-      parseM3U(content) {
-        const lines = content.split('\n');
-        let currentItem = null;
-        const items = [];
+      loadConfig() {
+        try {
+          const saved = localStorage.getItem('iptv-config');
+          if (saved) {
+            this.config = JSON.parse(saved);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar configuração:', error);
+        }
+      }
 
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim();
-          
-          if (line.startsWith('#EXTINF:')) {
-            const nameMatch = line.match(/,(.+)$/);
-            const name = nameMatch ? nameMatch[1].trim() : 'Canal sem nome';
-            
-            const logoMatch = line.match(/tvg-logo="([^"]+)"/);
-            const logo = logoMatch ? logoMatch[1] : '';
-            
-            const groupMatch = line.match(/group-title="([^"]+)"/);
-            const category = groupMatch ? groupMatch[1] : 'Outros';
-            
-            currentItem = {
-              id: Date.now() + Math.random(),
-              name: name,
-              category: category,
-              logo: logo,
-              url: ''
-            };
-          } else if (line && !line.startsWith('#') && currentItem) {
-            currentItem.url = line;
-            items.push(currentItem);
-            currentItem = null;
+      saveConfig() {
+        try {
+          localStorage.setItem('iptv-config', JSON.stringify(this.config));
+        } catch (error) {
+          console.error('Erro ao salvar configuração:', error);
+        }
+      }
+
+      getCachedData(key) {
+        const cached = this.cache.get(key);
+        if (cached && Date.now() - cached.timestamp < this.cacheExpiration) {
+          return cached.data;
+        }
+        this.cache.delete(key);
+        return null;
+      }
+
+      setCachedData(key, data) {
+        this.cache.set(key, {
+          data,
+          timestamp: Date.now()
+        });
+      }
+
+      async retryRequest(requestFn, attempts = this.retryAttempts) {
+        for (let i = 0; i < attempts; i++) {
+          try {
+            return await requestFn();
+          } catch (error) {
+            if (i === attempts - 1) throw error;
+            await new Promise(resolve => setTimeout(resolve, this.retryDelay * (i + 1)));
           }
         }
+      }
 
-        // Categorizar conteúdo
-        items.forEach(item => {
-          const nameLower = item.name.toLowerCase();
-          const categoryLower = item.category.toLowerCase();
-          
-          if (categoryLower.includes('movie') || categoryLower.includes('filme') || 
-              nameLower.includes('movie') || nameLower.includes('filme')) {
-            this.allContent.movies.push(item);
-          } else if (categoryLower.includes('series') || categoryLower.includes('série') ||
-                     nameLower.includes('s0') || nameLower.includes('temporada')) {
-            this.allContent.series.push(item);
-          } else if (categoryLower.includes('radio') || categoryLower.includes('rádio') ||
-                     nameLower.includes('radio') || nameLower.includes('fm')) {
-            this.allContent.radios.push(item);
-          } else {
-            this.allContent.channels.push(item);
+      async loadCategories() {
+        const cacheKey = 'categories';
+        let categories = this.getCachedData(cacheKey);
+        
+        if (!categories) {
+          try {
+            categories = await this.retryRequest(async () => {
+              const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_live_categories`);
+              if (!response.ok) throw new Error('Erro na requisição');
+              return await response.json();
+            });
+            this.setCachedData(cacheKey, categories);
+          } catch (error) {
+            console.error('Erro ao carregar categorias:', error);
+            categories = [];
           }
+        }
+        
+        this.categories = categories;
+        this.renderCategories();
+      }
+
+      async loadMovieCategories() {
+        const cacheKey = 'movie-categories';
+        let categories = this.getCachedData(cacheKey);
+        
+        if (!categories) {
+          try {
+            categories = await this.retryRequest(async () => {
+              const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_vod_categories`);
+              if (!response.ok) throw new Error('Erro na requisição');
+              return await response.json();
+            });
+            this.setCachedData(cacheKey, categories);
+          } catch (error) {
+            console.error('Erro ao carregar categorias de filmes:', error);
+            categories = [];
+          }
+        }
+        
+        this.movieCategories = categories;
+        this.renderMovieCategories();
+      }
+
+      async loadSeriesCategories() {
+        const cacheKey = 'series-categories';
+        let categories = this.getCachedData(cacheKey);
+        
+        if (!categories) {
+          try {
+            categories = await this.retryRequest(async () => {
+              const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_series_categories`);
+              if (!response.ok) throw new Error('Erro na requisição');
+              return await response.json();
+            });
+            this.setCachedData(cacheKey, categories);
+          } catch (error) {
+            console.error('Erro ao carregar categorias de séries:', error);
+            categories = [];
+          }
+        }
+        
+        this.seriesCategories = categories;
+        this.renderSeriesCategories();
+      }
+
+      renderCategories() {
+        const tabNav = document.getElementById('channelTabNav');
+        tabNav.innerHTML = '';
+        
+        this.categories.forEach((category, index) => {
+          const button = document.createElement('button');
+          button.className = 'tab-btn';
+          if (index === 0) button.classList.add('active');
+          button.textContent = category.category_name;
+          button.dataset.categoryId = category.category_id;
+          button.addEventListener('click', () => {
+            this.selectCategory(category.category_id);
+          });
+          tabNav.appendChild(button);
         });
 
-        console.log('Playlist carregada:', {
-          channels: this.allContent.channels.length,
-          movies: this.allContent.movies.length,
-          series: this.allContent.series.length,
-          radios: this.allContent.radios.length
+        if (this.categories.length > 0) {
+          this.selectCategory(this.categories[0].category_id);
+        }
+      }
+
+      renderMovieCategories() {
+        const tabNav = document.getElementById('movieTabNav');
+        tabNav.innerHTML = '';
+        
+        this.movieCategories.forEach((category, index) => {
+          const button = document.createElement('button');
+          button.className = 'tab-btn';
+          if (index === 0) button.classList.add('active');
+          button.textContent = category.category_name;
+          button.dataset.categoryId = category.category_id;
+          button.addEventListener('click', () => {
+            this.selectMovieCategory(category.category_id);
+          });
+          tabNav.appendChild(button);
         });
+
+        if (this.movieCategories.length > 0) {
+          this.selectMovieCategory(this.movieCategories[0].category_id);
+        }
+      }
+
+      renderSeriesCategories() {
+        const tabNav = document.getElementById('seriesTabNav');
+        tabNav.innerHTML = '';
+        
+        this.seriesCategories.forEach((category, index) => {
+          const button = document.createElement('button');
+          button.className = 'tab-btn';
+          if (index === 0) button.classList.add('active');
+          button.textContent = category.category_name;
+          button.dataset.categoryId = category.category_id;
+          button.addEventListener('click', () => {
+            this.selectSeriesCategory(category.category_id);
+          });
+          tabNav.appendChild(button);
+        });
+
+        if (this.seriesCategories.length > 0) {
+          this.selectSeriesCategory(this.seriesCategories[0].category_id);
+        }
+      }
+
+      async selectCategory(categoryId) {
+        try {
+          document.querySelectorAll('#channelTabNav .tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.categoryId === categoryId) {
+              btn.classList.add('active');
+            }
+          });
+
+          this.currentCategory = categoryId;
+          document.getElementById('channelList').innerHTML = `
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando canais...</p>
+            </div>
+          `;
+
+          await this.loadChannels(categoryId);
+        } catch (error) {
+          console.error('Erro ao selecionar categoria:', error);
+          this.showErrorOverlay('Erro ao carregar canais', () => this.selectCategory(categoryId));
+        }
+      }
+
+      async selectMovieCategory(categoryId) {
+        try {
+          document.querySelectorAll('#movieTabNav .tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.categoryId === categoryId) {
+              btn.classList.add('active');
+            }
+          });
+
+          this.currentMovieCategory = categoryId;
+          document.getElementById('movieList').innerHTML = `
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando filmes...</p>
+            </div>
+          `;
+
+          await this.loadMovies(categoryId);
+        } catch (error) {
+          console.error('Erro ao selecionar categoria de filmes:', error);
+          this.showErrorOverlay('Erro ao carregar filmes', () => this.selectMovieCategory(categoryId));
+        }
+      }
+
+      async selectSeriesCategory(categoryId) {
+        try {
+          document.querySelectorAll('#seriesTabNav .tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.categoryId === categoryId) {
+              btn.classList.add('active');
+            }
+          });
+
+          this.currentSeriesCategory = categoryId;
+          
+          const seriesList = document.getElementById('seriesList');
+          const episodeList = document.getElementById('episodeList');
+          seriesList.style.display = 'block';
+          episodeList.style.display = 'none';
+          
+          seriesList.innerHTML = `
+            <div class="text-center p-4">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando séries...</p>
+            </div>
+          `;
+
+          await this.loadSeries(categoryId);
+        } catch (error) {
+          console.error('Erro ao selecionar categoria de séries:', error);
+          this.showErrorOverlay('Erro ao carregar séries', () => this.selectSeriesCategory(categoryId));
+        }
+      }
+
+      async loadChannels(categoryId) {
+        const cacheKey = `channels-${categoryId}`;
+        let channels = this.getCachedData(cacheKey);
+        
+        if (!channels) {
+          try {
+            channels = await this.retryRequest(async () => {
+              const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_live_streams&category_id=${categoryId}`);
+              if (!response.ok) throw new Error('Erro na requisição');
+              const data = await response.json();
+              return data.map(stream => ({
+                id: stream.stream_id,
+                name: stream.name,
+                type: 'channel',
+                url: `${this.config.server}/live/${this.config.username}/${this.config.password}/${stream.stream_id}.m3u8`,
+                letter: stream.name.charAt(0).toUpperCase(),
+                icon: stream.stream_icon
+              }));
+            });
+            this.setCachedData(cacheKey, channels);
+          } catch (error) {
+            console.error('Erro ao carregar canais:', error);
+            this.showErrorOverlay('Erro ao carregar canais', () => this.loadChannels(categoryId));
+            return;
+          }
+        }
+        
+        this.channels = channels;
+        this.allContent = this.allContent.filter(item => item.type !== 'channel');
+        this.allContent.push(...this.channels);
+        this.renderChannels();
+      }
+
+      async loadMovies(categoryId) {
+        const cacheKey = `movies-${categoryId}`;
+        let movies = this.getCachedData(cacheKey);
+        
+        if (!movies) {
+          try {
+            movies = await this.retryRequest(async () => {
+              const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_vod_streams&category_id=${categoryId}`);
+              if (!response.ok) throw new Error('Erro na requisição');
+              const data = await response.json();
+              return data.map(movie => ({
+                id: movie.stream_id,
+                name: movie.name || movie.title,
+                type: 'movie',
+                title: movie.title,
+                year: movie.year,
+                rating: movie.rating,
+                icon: movie.stream_icon,
+                url: `${this.config.server}/movie/${this.config.username}/${this.config.password}/${movie.stream_id}.mp4`,
+                letter: (movie.name || movie.title).charAt(0).toUpperCase()
+              }));
+            });
+            this.setCachedData(cacheKey, movies);
+          } catch (error) {
+            console.error('Erro ao carregar filmes:', error);
+            this.showErrorOverlay('Erro ao carregar filmes', () => this.loadMovies(categoryId));
+            return;
+          }
+        }
+        
+        this.movies = movies;
+        this.allContent = this.allContent.filter(item => item.type !== 'movie');
+        this.allContent.push(...this.movies);
+        this.renderMovies();
+      }
+
+      async loadSeries(categoryId) {
+        const cacheKey = `series-${categoryId}`;
+        let series = this.getCachedData(cacheKey);
+        
+        if (!series) {
+          try {
+            series = await this.retryRequest(async () => {
+              const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_series&category_id=${categoryId}`);
+              if (!response.ok) throw new Error('Erro na requisição');
+              const data = await response.json();
+              return data.map(s => ({
+                id: s.series_id,
+                name: s.name || s.title,
+                type: 'series',
+                title: s.title,
+                year: s.year,
+                rating: s.rating,
+                icon: s.cover,
+                letter: (s.name || s.title).charAt(0).toUpperCase()
+              }));
+            });
+            this.setCachedData(cacheKey, series);
+          } catch (error) {
+            console.error('Erro ao carregar séries:', error);
+            this.showErrorOverlay('Erro ao carregar séries', () => this.loadSeries(categoryId));
+            return;
+          }
+        }
+        
+        this.series = series;
+        this.allContent = this.allContent.filter(item => item.type !== 'series');
+        this.allContent.push(...this.series);
+        this.renderSeries();
       }
 
       loadSampleContent() {
-        // Canais de exemplo
-        this.allContent.channels = [
-          { id: 1, name: 'Globo HD', category: 'Abertos', url: 'https://sample-url.com', logo: 'https://i.ibb.co/sample1.png' },
-          { id: 2, name: 'SBT HD', category: 'Abertos', url: 'https://sample-url.com', logo: '' },
-          { id: 3, name: 'Record HD', category: 'Abertos', url: 'https://sample-url.com', logo: '' },
-          { id: 4, name: 'ESPN Brasil', category: 'Esportes', url: 'https://sample-url.com', logo: '' },
-          { id: 5, name: 'SporTV', category: 'Esportes', url: 'https://sample-url.com', logo: '' },
-          { id: 6, name: 'HBO', category: 'Filmes', url: 'https://sample-url.com', logo: '' },
-          { id: 7, name: 'Telecine Premium', category: 'Filmes', url: 'https://sample-url.com', logo: '' }
+        this.channels = [
+          { id: 1, name: 'Globo HD', category: 'Abertos', url: '', logo: '', type: 'channel', letter: 'G' },
+          { id: 2, name: 'SBT HD', category: 'Abertos', url: '', logo: '', type: 'channel', letter: 'S' },
+          { id: 3, name: 'Record HD', category: 'Abertos', url: '', logo: '', type: 'channel', letter: 'R' }
         ];
 
-        // Filmes de exemplo
-        this.allContent.movies = [
-          { id: 101, name: 'Vingadores: Ultimato', category: 'Ação', url: 'https://sample-url.com', logo: '' },
-          { id: 102, name: 'O Poderoso Chefão', category: 'Drama', url: 'https://sample-url.com', logo: '' }
+        this.movies = [
+          { id: 101, name: 'Exemplo Filme', category: 'Ação', url: '', logo: '', type: 'movie', letter: 'E' }
         ];
 
-        // Séries de exemplo
-        this.allContent.series = [
-          { id: 201, name: 'Game of Thrones S01E01', category: 'Fantasia', url: 'https://sample-url.com', logo: '' },
-          { id: 202, name: 'Breaking Bad S01E01', category: 'Drama', url: 'https://sample-url.com', logo: '' }
+        this.series = [
+          { id: 201, name: 'Exemplo Série', category: 'Drama', url: '', logo: '', type: 'series', letter: 'E' }
         ];
 
-        // Rádios de exemplo
-        this.allContent.radios = [
-          { id: 301, name: 'Jovem Pan FM', category: 'Notícias', url: 'https://sample-url.com', logo: '' },
-          { id: 302, name: 'Rádio Rock', category: 'Música', url: 'https://sample-url.com', logo: '' }
+        this.radios = [
+          { id: 301, name: 'Exemplo Rádio', category: 'Música', url: '', logo: '', type: 'radio', letter: 'E' }
         ];
 
-        this.renderCurrentSection();
+        this.renderCategories();
+        this.renderMovieCategories();
+        this.renderSeriesCategories();
+        this.renderChannels();
       }
 
-      switchSection(section) {
-        this.currentSection = section;
-        this.currentCategory = 'Todos';
-        this.renderCurrentSection();
-      }
-
-      renderCurrentSection() {
-        const content = this.allContent[this.currentSection] || [];
-        const categories = ['Todos', ...new Set(content.map(item => item.category))];
+      renderChannels() {
+        const channelList = document.getElementById('channelList');
         
-        // Renderizar categorias
-        const categoriesContainer = document.getElementById(`${this.currentSection}Categories`);
-        if (categoriesContainer) {
-          categoriesContainer.innerHTML = `
-            <div class="tab-nav">
-              ${categories.map(cat => `
-                <button class="tab-btn ${cat === this.currentCategory ? 'active' : ''}" 
-                        onclick="app.filterByCategory('${cat}')">
-                  ${cat}
-                </button>
-              `).join('')}
-            </div>
-          `;
-        }
-
-        // Renderizar lista
-        this.renderContentList(content);
-      }
-
-      filterByCategory(category) {
-        this.currentCategory = category;
-        this.renderCurrentSection();
-      }
-
-      renderContentList(items) {
-        const filteredItems = this.currentCategory === 'Todos' 
-          ? items 
-          : items.filter(item => item.category === this.currentCategory);
-
-        const listContainer = document.getElementById(`${this.currentSection}List`);
-        
-        if (!filteredItems.length) {
-          listContainer.innerHTML = `
-            <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
-              <i class="fas fa-inbox" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
-              <p>Nenhum conteúdo encontrado</p>
+        if (!this.channels.length) {
+          channelList.innerHTML = `
+            <div class="text-center p-4">
+              <i class="fas fa-inbox fa-3x mb-3" style="opacity: 0.5;"></i>
+              <p>Nenhum canal encontrado</p>
             </div>
           `;
           return;
         }
 
-        listContainer.innerHTML = filteredItems.map(item => {
-          const isFavorite = this.favorites.includes(item.id);
-          const isPlaying = this.currentContent && this.currentContent.id === item.id;
+        channelList.innerHTML = '';
+        this.channels.forEach(channel => {
+          const isFavorite = this.favoritesBackend.isFavorite(channel.id);
+          const isPlaying = this.currentChannel && this.currentChannel.id === channel.id;
           
-          return `
-            <div class="content-item ${isPlaying ? 'playing' : ''}" onclick='app.playContent(${JSON.stringify(item).replace(/'/g, "\\'")})'>
-              <div class="content-avatar" ${item.logo ? `style="background-image: url('${item.logo}')"` : ''}>
-                ${!item.logo ? item.name.charAt(0).toUpperCase() : ''}
-              </div>
-              <div class="content-info">
-                <div class="content-name">${item.name}</div>
-                <div class="content-details">${item.category}</div>
-              </div>
-              ${isPlaying ? '<span class="playing-indicator">Tocando</span>' : ''}
-              <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="event.stopPropagation(); app.toggleFavorite(${item.id})">
-                <i class="fas fa-heart"></i>
-              </button>
+          const item = document.createElement('div');
+          item.className = 'content-item' + (isPlaying ? ' playing' : '');
+          
+          const avatarStyle = channel.icon ? `background-image: url('${channel.icon}'); background-size: cover;` : '';
+          
+          item.innerHTML = `
+            <div class="content-avatar" style="${avatarStyle}">
+              ${!channel.icon ? channel.letter : ''}
+            </div>
+            <div class="content-info">
+              <div class="content-name">${channel.name}</div>
+              <div class="content-details">Canal</div>
+            </div>
+            ${isPlaying ? '<span class="playing-indicator">Tocando</span>' : ''}
+            <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${channel.id}">
+              <i class="fas fa-heart"></i>
+            </button>
+          `;
+
+          item.querySelector('.content-avatar').addEventListener('click', () => this.playChannel(channel));
+          item.querySelector('.content-info').addEventListener('click', () => this.playChannel(channel));
+          item.querySelector('.favorite-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleFavorite(channel.id);
+          });
+
+          channelList.appendChild(item);
+        });
+      }
+
+      renderMovies() {
+        const movieList = document.getElementById('movieList');
+        
+        if (!this.movies.length) {
+          movieList.innerHTML = `
+            <div class="text-center p-4">
+              <i class="fas fa-inbox fa-3x mb-3" style="opacity: 0.5;"></i>
+              <p>Nenhum filme encontrado</p>
             </div>
           `;
-        }).join('');
-      }
-
-      playContent(content) {
-        console.log('Playing:', content);
-        this.currentContent = content;
-        
-        // Esconder placeholder
-        document.getElementById('videoPlaceholder').style.display = 'none';
-        
-        // Verificar se é rádio
-        const isRadio = this.currentSection === 'radios';
-        
-        if (isRadio) {
-          this.playRadio(content);
-        } else {
-          this.playVideo(content);
+          return;
         }
-        
-        // Atualizar UI
-        this.renderCurrentSection();
+
+        movieList.innerHTML = '';
+        this.movies.forEach(movie => {
+          const isFavorite = this.favoritesBackend.isFavorite(movie.id);
+          const isPlaying = this.currentMovie && this.currentMovie.id === movie.id;
+          
+          const item = document.createElement('div');
+          item.className = 'content-item' + (isPlaying ? ' playing' : '');
+          
+          const avatarStyle = movie.icon ? `background-image: url('${movie.icon}'); background-size: cover;` : '';
+          
+          item.innerHTML = `
+            <div class="content-avatar" style="${avatarStyle}">
+              ${!movie.icon ? movie.letter : ''}
+            </div>
+            <div class="content-info">
+              <div class="content-name">${movie.name}</div>
+              <div class="content-details">${movie.year || 'Filme'} ${movie.rating ? `⭐ ${movie.rating}` : ''}</div>
+            </div>
+            ${isPlaying ? '<span class="playing-indicator">Tocando</span>' : ''}
+            <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${movie.id}">
+              <i class="fas fa-heart"></i>
+            </button>
+          `;
+
+          item.querySelector('.content-avatar').addEventListener('click', () => this.playMovie(movie));
+          item.querySelector('.content-info').addEventListener('click', () => this.playMovie(movie));
+          item.querySelector('.favorite-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleFavorite(movie.id);
+          });
+
+          movieList.appendChild(item);
+        });
       }
 
-      playVideo(content) {
-        // Esconder display de rádio
-        document.getElementById('radioVisualDisplay').classList.remove('active');
-        document.getElementById('radioInfoOverlay').classList.remove('visible');
+      renderSeries() {
+        const seriesList = document.getElementById('seriesList');
         
-        const video = this.player;
+        if (!this.series.length) {
+          seriesList.innerHTML = `
+            <div class="text-center p-4">
+              <i class="fas fa-inbox fa-3x mb-3" style="opacity: 0.5;"></i>
+              <p>Nenhuma série encontrada</p>
+            </div>
+          `;
+          return;
+        }
+
+        seriesList.innerHTML = '';
+        this.series.forEach(series => {
+          const isFavorite = this.favoritesBackend.isFavorite(series.id);
+          
+          const item = document.createElement('div');
+          item.className = 'content-item';
+          
+          const avatarStyle = series.icon ? `background-image: url('${series.icon}'); background-size: cover;` : '';
+          
+          item.innerHTML = `
+            <div class="content-avatar" style="${avatarStyle}">
+              ${!series.icon ? series.letter : ''}
+            </div>
+            <div class="content-info">
+              <div class="content-name">${series.name}</div>
+              <div class="content-details">${series.year || 'Série'} ${series.rating ? `⭐ ${series.rating}` : ''}</div>
+            </div>
+            <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${series.id}">
+              <i class="fas fa-heart"></i>
+            </button>
+          `;
+
+          item.querySelector('.content-avatar').addEventListener('click', () => this.showSeriesEpisodes(series));
+          item.querySelector('.content-info').addEventListener('click', () => this.showSeriesEpisodes(series));
+          item.querySelector('.favorite-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleFavorite(series.id);
+          });
+
+          seriesList.appendChild(item);
+        });
+      }
+
+      async showSeriesEpisodes(series) {
+        try {
+          this.currentSeries = series;
+          
+          const seriesList = document.getElementById('seriesList');
+          const episodeList = document.getElementById('episodeList');
+          
+          seriesList.style.display = 'none';
+          episodeList.style.display = 'grid';
+          episodeList.innerHTML = `
+            <div class="episode-back-button">
+              <button class="btn btn-secondary" onclick="iptvApp.backToSeries()">
+                <i class="fas fa-arrow-left me-2"></i>Voltar para Séries
+              </button>
+            </div>
+            <div class="text-center p-4" style="grid-column: 1 / -1;">
+              <div class="loading-spinner"></div>
+              <p class="mt-2 mb-0">Carregando episódios...</p>
+            </div>
+          `;
+
+          const response = await fetch(`${this.config.server}/player_api.php?username=${this.config.username}&password=${this.config.password}&action=get_series_info&series_id=${series.id}`);
+          const data = await response.json();
+          
+          this.episodes = [];
+          if (data.episodes) {
+            Object.keys(data.episodes).forEach(season => {
+              data.episodes[season].forEach(ep => {
+                this.episodes.push({
+                  id: ep.id,
+                  season: season,
+                  episode_num: ep.episode_num,
+                  title: ep.title || `Episódio ${ep.episode_num}`,
+                  url: `${this.config.server}/series/${this.config.username}/${this.config.password}/${ep.id}.${ep.container_extension || 'mp4'}`,
+                  info: ep.info || {},
+                  type: 'episode'
+                });
+              });
+            });
+          }
+
+          this.renderEpisodes();
+        } catch (error) {
+          console.error('Erro ao carregar episódios:', error);
+          this.showErrorOverlay('Erro ao carregar episódios', () => this.showSeriesEpisodes(series));
+        }
+      }
+
+      renderEpisodes() {
+        const episodeList = document.getElementById('episodeList');
         
-        // Limpar HLS anterior
+        if (!this.episodes.length) {
+          episodeList.innerHTML = `
+            <div class="episode-back-button">
+              <button class="btn btn-secondary" onclick="iptvApp.backToSeries()">
+                <i class="fas fa-arrow-left me-2"></i>Voltar para Séries
+              </button>
+            </div>
+            <div class="text-center p-4" style="grid-column: 1 / -1;">
+              <i class="fas fa-inbox fa-3x mb-3" style="opacity: 0.5;"></i>
+              <p>Nenhum episódio encontrado</p>
+            </div>
+          `;
+          return;
+        }
+
+        episodeList.innerHTML = `
+          <div class="episode-back-button">
+            <button class="btn btn-secondary" onclick="iptvApp.backToSeries()">
+              <i class="fas fa-arrow-left me-2"></i>Voltar para Séries
+            </button>
+          </div>
+        `;
+
+        this.episodes.forEach((episode, index) => {
+          const isCurrent = this.currentEpisode && this.currentEpisode.id === episode.id;
+          const progress = this.checkContinueWatching(episode, 'episode');
+          const progressText = progress ? `<div class="progress-indicator">${Math.round(progress.percentage)}% assistido</div>` : '';
+          
+          const episodeCard = document.createElement('div');
+          episodeCard.className = 'episode-card' + (isCurrent ? ' current' : '');
+          episodeCard.innerHTML = `
+            <div class="episode-number">Temporada ${episode.season} - Episódio ${episode.episode_num}</div>
+            <div class="episode-title">${episode.title}</div>
+            <div class="episode-info">
+              ${episode.info.duration || ''}
+              ${progressText}
+            </div>
+          `;
+
+          episodeCard.addEventListener('click', () => {
+            this.playEpisode(episode, index);
+          });
+
+          episodeList.appendChild(episodeCard);
+        });
+      }
+
+      playChannel(channel) {
+        const progress = this.checkContinueWatching(channel, 'channel');
+
+        const doPlay = (startTime = 0) => {
+          try {
+            this.animateLogo();
+            this.currentChannel = channel;
+            this.currentMovie = null;
+            this.currentSeries = null;
+            this.currentEpisode = null;
+            this.currentRadio = null;
+
+            this.setupAdvancedPlayer(channel.url, 'channel');
+
+            this.player.onloadedmetadata = () => {
+              if (startTime > 0) {
+                this.player.currentTime = startTime;
+              }
+              this.player.play().catch(e => console.log('Autoplay bloqueado:', e));
+            };
+
+            document.getElementById('videoPlaceholder').style.display = 'none';
+            this.renderChannels();
+            this.hideCustomControls();
+            this.hideRadioInfo();
+            this.hideRadioVisualDisplay();
+          } catch (error) {
+            console.error('Erro ao reproduzir canal:', error);
+            this.showErrorOverlay('Erro ao reproduzir canal', () => this.playChannel(channel));
+          }
+        };
+
+        if (progress) {
+          this.showContinueModal(progress, doPlay, () => doPlay(0));
+        } else {
+          doPlay();
+        }
+      }
+
+      playMovie(movie) {
+        const progress = this.checkContinueWatching(movie, 'movie');
+
+        const doPlay = (startTime = 0) => {
+          try {
+            this.animateLogo();
+            this.currentMovie = movie;
+            this.currentChannel = null;
+            this.currentSeries = null;
+            this.currentEpisode = null;
+            this.currentRadio = null;
+
+            this.setupAdvancedPlayer(movie.url, 'movie');
+
+            this.player.onloadedmetadata = () => {
+              if (startTime > 0) {
+                this.player.currentTime = startTime;
+              }
+              this.player.play().catch(e => console.log('Autoplay bloqueado:', e));
+            };
+
+            document.getElementById('videoPlaceholder').style.display = 'none';
+            this.renderMovies();
+            this.hideCustomControls();
+            this.hideRadioInfo();
+            this.hideRadioVisualDisplay();
+          } catch (error) {
+            console.error('Erro ao reproduzir filme:', error);
+            this.showErrorOverlay('Erro ao reproduzir filme', () => this.playMovie(movie));
+          }
+        };
+
+        if (progress) {
+          this.showContinueModal(progress, doPlay, () => doPlay(0));
+        } else {
+          doPlay();
+        }
+      }
+
+      playEpisode(episode, index) {
+        const progress = this.checkContinueWatching(episode, 'episode');
+
+        const doPlay = (startTime = 0) => {
+          try {
+            this.animateLogo();
+            this.currentEpisode = episode;
+            this.currentEpisodeIndex = index;
+            this.currentChannel = null;
+            this.currentMovie = null;
+            this.currentRadio = null;
+
+            this.setupAdvancedPlayer(episode.url, 'episode');
+
+            this.player.onloadedmetadata = () => {
+              if (startTime > 0) {
+                this.player.currentTime = startTime;
+              }
+              this.player.play().catch(e => console.log('Autoplay bloqueado:', e));
+            };
+
+            document.getElementById('videoPlaceholder').style.display = 'none';
+            this.renderEpisodes();
+            this.showCustomControls();
+            this.updateEpisodeNavigation();
+            this.hideRadioInfo();
+            this.hideRadioVisualDisplay();
+          } catch (error) {
+            console.error('Erro ao reproduzir episódio:', error);
+            this.showErrorOverlay('Erro ao reproduzir episódio', () => this.playEpisode(episode, index));
+          }
+        };
+
+        if (progress) {
+          this.showContinueModal(progress, doPlay, () => doPlay(0));
+        } else {
+          doPlay();
+        }
+      }
+
+      playRadio(radio) {
+        try {
+          this.animateLogo();
+          this.currentRadio = radio;
+          this.currentChannel = null;
+          this.currentMovie = null;
+          this.currentSeries = null;
+          this.currentEpisode = null;
+
+          this.showRadioVisualDisplay();
+          this.showRadioInfo();
+
+          const logo = radio.logo || radio.icon || 'https://via.placeholder.com/200?text=' + radio.name.charAt(0);
+          
+          document.getElementById('radioMainImage').src = logo;
+          document.getElementById('radioMainName').textContent = radio.name;
+          document.getElementById('radioMainFrequency').textContent = radio.category;
+          document.getElementById('radioBackground').style.backgroundImage = `url('${logo}')`;
+          
+          document.getElementById('radioLogoSmall').src = logo;
+          document.getElementById('radioNameOverlay').textContent = radio.name;
+          document.getElementById('radioFrequencyOverlay').textContent = radio.category;
+
+          this.setupAdvancedPlayer(radio.url, 'radio');
+
+          this.player.onloadedmetadata = () => {
+            this.player.play().catch(e => console.log('Autoplay bloqueado:', e));
+          };
+
+          document.getElementById('videoPlaceholder').style.display = 'none';
+          this.hideCustomControls();
+        } catch (error) {
+          console.error('Erro ao reproduzir rádio:', error);
+          this.showErrorOverlay('Erro ao reproduzir rádio', () => this.playRadio(radio));
+        }
+      }
+
+      setupAdvancedPlayer(url, type) {
         if (this.hls) {
           this.hls.destroy();
           this.hls = null;
         }
-        
-        // Verificar se é stream HLS
-        if (content.url.includes('.m3u8')) {
+
+        const video = this.player;
+
+        if (url.includes('.m3u8')) {
           if (Hls.isSupported()) {
             this.hls = new Hls();
-            this.hls.loadSource(content.url);
+            this.hls.loadSource(url);
             this.hls.attachMedia(video);
-            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              video.play().catch(e => console.log('Autoplay bloqueado:', e));
-            });
             this.hls.on(Hls.Events.ERROR, (event, data) => {
               console.error('HLS Error:', data);
               if (data.fatal) {
-                showError('Erro ao carregar stream', 'Não foi possível reproduzir este conteúdo');
+                this.showErrorOverlay('Erro ao carregar stream', null);
               }
             });
           } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = content.url;
-            video.addEventListener('loadedmetadata', () => {
-              video.play().catch(e => console.log('Autoplay bloqueado:', e));
-            });
+            video.src = url;
           }
         } else {
-          video.src = content.url;
-          video.play().catch(e => console.log('Autoplay bloqueado:', e));
+          video.src = url;
         }
       }
 
-      playRadio(content) {
-        // Mostrar display de rádio
-        document.getElementById('radioVisualDisplay').classList.add('active');
-        document.getElementById('radioInfoOverlay').classList.add('visible');
+      backToSeries() {
+        const episodeList = document.getElementById('episodeList');
+        const seriesList = document.getElementById('seriesList');
         
-        // Atualizar informações da rádio
-        const logo = content.logo || 'https://via.placeholder.com/200?text=' + content.name.charAt(0);
+        episodeList.style.display = 'none';
+        seriesList.style.display = 'block';
         
-        document.getElementById('radioMainImage').src = logo;
-        document.getElementById('radioMainName').textContent = content.name;
-        document.getElementById('radioMainFrequency').textContent = content.category;
-        document.getElementById('radioBackground').style.backgroundImage = `url('${logo}')`;
+        this.hideCustomControls();
+        this.currentSeries = null;
+        this.currentEpisode = null;
+        this.episodes = [];
         
-        document.getElementById('radioLogoSmall').src = logo;
-        document.getElementById('radioNameOverlay').textContent = content.name;
-        document.getElementById('radioFrequencyOverlay').textContent = content.category;
+        this.renderSeries();
+      }
+
+      showCustomControls() {
+        document.getElementById('customControls').style.display = 'flex';
+        this.updateNavigationButtons();
+      }
+
+      hideCustomControls() {
+        document.getElementById('customControls').style.display = 'none';
+        this.hideEpisodeNavigation();
+      }
+
+      updateNavigationButtons() {
+        const prevBtn = document.getElementById('prevEpisodeBtn');
+        const nextBtn = document.getElementById('nextEpisodeBtn');
         
-        // Reproduzir áudio
-        const video = this.player;
+        prevBtn.disabled = this.currentEpisodeIndex <= 0;
+        nextBtn.disabled = this.currentEpisodeIndex >= this.episodes.length - 1;
+      }
+
+      playPreviousEpisode() {
+        if (this.currentEpisodeIndex > 0) {
+          const prevIndex = this.currentEpisodeIndex - 1;
+          this.playEpisode(this.episodes[prevIndex], prevIndex);
+        }
+      }
+
+      playNextEpisode() {
+        if (this.currentEpisodeIndex < this.episodes.length - 1) {
+          const nextIndex = this.currentEpisodeIndex + 1;
+          this.playEpisode(this.episodes[nextIndex], nextIndex);
+        }
+      }
+
+      toggleEpisodeNavigation() {
+        const overlay = document.getElementById('episodeNavOverlay');
+        if (overlay.classList.contains('visible')) {
+          this.hideEpisodeNavigation();
+        } else {
+          this.showEpisodeNavigation();
+        }
+      }
+
+      showEpisodeNavigation() {
+        if (!this.currentSeries || this.episodes.length === 0) return;
+
+        const overlay = document.getElementById('episodeNavOverlay');
+        const title = document.getElementById('episodeNavTitle');
+        const list = document.getElementById('episodeNavList');
+
+        title.textContent = this.currentSeries.name;
+        list.innerHTML = '';
+
+        this.episodes.forEach((episode, index) => {
+          const item = document.createElement('button');
+          item.className = 'episode-nav-item';
+          
+          if (this.currentEpisode && this.currentEpisode.id === episode.id) {
+            item.classList.add('current');
+          }
+
+          item.textContent = `T${episode.season}E${episode.episode_num} - ${episode.title}`;
+          item.addEventListener('click', () => {
+            this.playEpisode(episode, index);
+            this.hideEpisodeNavigation();
+          });
+
+          list.appendChild(item);
+        });
+
+        overlay.classList.add('visible');
+      }
+
+      hideEpisodeNavigation() {
+        document.getElementById('episodeNavOverlay').classList.remove('visible');
+      }
+
+      updateEpisodeNavigation() {
+        if (document.getElementById('episodeNavOverlay').classList.contains('visible')) {
+          this.showEpisodeNavigation();
+        }
+      }
+
+      checkContinueWatching(content, type) {
+        const progressKey = type === 'channel' ? `channel_${content.id || content}` : 
+                           type === 'movie' ? `movie_${content.id}` : 
+                           type === 'series' ? `series_${content.id}` :
+                           type === 'episode' ? `episode_${content.id}` :
+                           `radio_${content.id}`;
+                           
+        const progress = this.watchProgress.get(progressKey);
         
-        // Limpar HLS anterior
-        if (this.hls) {
-          this.hls.destroy();
-          this.hls = null;
+        if (progress && progress.percentage > 5 && progress.percentage < 90) {
+          return {
+            time: progress.currentTime,
+            percentage: progress.percentage,
+            duration: progress.duration
+          };
         }
         
-        if (content.url.includes('.m3u8')) {
-          if (Hls.isSupported()) {
-            this.hls = new Hls();
-            this.hls.loadSource(content.url);
-            this.hls.attachMedia(video);
-            this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              video.play().catch(e => console.log('Autoplay bloqueado:', e));
+        return null;
+      }
+
+      showContinueModal(progress, continueCallback, restartCallback) {
+        const modal = document.getElementById('continueModal');
+        const message = document.getElementById('continueMessage');
+        
+        message.textContent = `Você parou em ${Math.round(progress.percentage)}% do conteúdo`;
+        
+        this.pendingContinueAction = {
+          continue: () => continueCallback(progress.time),
+          restart: () => restartCallback()
+        };
+        
+        modal.style.display = 'flex';
+      }
+
+      saveWatchProgress() {
+        if (!this.player || this.player.paused) return;
+        
+        const currentTime = this.player.currentTime;
+        const duration = this.player.duration;
+        
+        if (!currentTime || !duration || currentTime < 30) return;
+        
+        const percentage = (currentTime / duration) * 100;
+        
+        let progressKey = '';
+        if (this.currentChannel) {
+          progressKey = `channel_${this.currentChannel.id}`;
+        } else if (this.currentMovie) {
+          progressKey = `movie_${this.currentMovie.id}`;
+        } else if (this.currentEpisode) {
+          progressKey = `episode_${this.currentEpisode.id}`;
+        } else if (this.currentRadio) {
+          progressKey = `radio_${this.currentRadio.id}`;
+        }
+        
+        if (progressKey) {
+          this.watchProgress.set(progressKey, {
+            currentTime,
+            duration,
+            percentage,
+            timestamp: Date.now()
+          });
+          
+          this.saveWatchProgressToStorage();
+        }
+      }
+
+      loadWatchProgress() {
+        try {
+          const saved = localStorage.getItem('iptv-watch-progress');
+          if (saved) {
+            const data = JSON.parse(saved);
+            this.watchProgress = new Map(data);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar progresso:', error);
+        }
+      }
+
+      saveWatchProgressToStorage() {
+        try {
+          const data = Array.from(this.watchProgress.entries());
+          localStorage.setItem('iptv-watch-progress', JSON.stringify(data));
+        } catch (error) {
+          console.error('Erro ao salvar progresso:', error);
+        }
+      }
+
+      toggleFavorite(itemId) {
+        let item = null;
+        let itemType = null;
+        
+        item = this.channels.find(c => c.id === itemId);
+        if (item) itemType = 'channel';
+        
+        if (!item) {
+          item = this.movies.find(m => m.id === itemId);
+          if (item) itemType = 'movie';
+        }
+        
+        if (!item) {
+          item = this.series.find(s => s.id === itemId);
+          if (item) itemType = 'series';
+        }
+        
+        if (!item) {
+          item = this.radios.find(r => r.id === itemId);
+          if (item) itemType = 'radio';
+        }
+        
+        if (!item) {
+          const favoriteItem = this.favoritesBackend.getFavorites().find(f => f.id === itemId);
+          if (favoriteItem) {
+            item = favoriteItem;
+            itemType = favoriteItem.type;
+          }
+        }
+        
+        if (!item) {
+          console.warn('Item não encontrado:', itemId);
+          return;
+        }
+        
+        const wasFavorite = this.favoritesBackend.isFavorite(itemId);
+        
+        if (wasFavorite) {
+          this.favoritesBackend.removeFavorite(itemId);
+          this.favorites.delete(itemId);
+          this.showToast(`Removido dos favoritos: ${item.name}`, 'success');
+        } else {
+          this.favoritesBackend.addFavorite(itemId, { ...item, type: itemType });
+          this.favorites.add(itemId);
+          this.showToast(`Adicionado aos favoritos: ${item.name}`, 'success');
+        }
+        
+        this.updateAllFavoriteButtons();
+        
+        if (this.activeContent === 'channels') {
+          this.renderChannels();
+        } else if (this.activeContent === 'movies') {
+          this.renderMovies();
+        } else if (this.activeContent === 'series') {
+          this.renderSeries();
+        } else if (this.activeContent === 'favorites') {
+          this.renderFavorites();
+        }
+      }
+
+      loadFavorites() {
+        try {
+          const backendFavorites = this.favoritesBackend.getFavorites();
+          this.favorites = new Set(backendFavorites.map(item => item.id));
+          
+          const saved = localStorage.getItem('iptv-favorites');
+          if (saved) {
+            const oldFavorites = JSON.parse(saved);
+            oldFavorites.forEach(id => {
+              if (!this.favorites.has(id)) {
+                this.favorites.add(id);
+              }
             });
           }
-        } else {
-          video.src = content.url;
-          video.play().catch(e => console.log('Autoplay bloqueado:', e));
+        } catch (error) {
+          console.error('Erro ao carregar favoritos:', error);
         }
       }
 
-      toggleFavorite(id) {
-        const index = this.favorites.indexOf(id);
-        if (index > -1) {
-          this.favorites.splice(index, 1);
-        } else {
-          this.favorites.push(id);
+      saveFavorites() {
+        try {
+          localStorage.setItem('iptv-favorites', JSON.stringify([...this.favorites]));
+        } catch (error) {
+          console.error('Erro ao salvar favoritos:', error);
         }
-        localStorage.setItem('favorites', JSON.stringify(this.favorites));
-        
-        // Atualizar UI
-        this.renderCurrentSection();
-        this.updateFavoritesList();
       }
 
-      updateFavoritesList() {
+      renderFavorites() {
         const favoritesList = document.getElementById('favoritesList');
-        const allItems = [
-          ...this.allContent.channels,
-          ...this.allContent.movies,
-          ...this.allContent.series,
-          ...this.allContent.radios
-        ];
         
-        const favoriteItems = allItems.filter(item => this.favorites.includes(item.id));
+        const favorites = this.favoritesBackend.getFavorites();
         
-        if (!favoriteItems.length) {
+        if (favorites.length === 0) {
           favoritesList.innerHTML = `
-            <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
-              <i class="fas fa-heart" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
-              <p>Nenhum favorito ainda</p>
+            <div class="favorites-empty">
+              <i class="fas fa-heart"></i>
+              <h5>Nenhum favorito ainda</h5>
+              <p>Toque no ❤️ nos seus conteúdos preferidos!</p>
             </div>
           `;
           return;
         }
         
-        favoritesList.innerHTML = favoriteItems.map(item => {
-          const isPlaying = this.currentContent && this.currentContent.id === item.id;
+        favoritesList.innerHTML = '';
+        
+        favorites.forEach(favorite => {
+          const card = document.createElement('div');
+          card.className = 'favorite-card';
           
-          return `
-            <div class="content-item ${isPlaying ? 'playing' : ''}" onclick='app.playContent(${JSON.stringify(item).replace(/'/g, "\\'")})'>
-              <div class="content-avatar" ${item.logo ? `style="background-image: url('${item.logo}')"` : ''}>
-                ${!item.logo ? item.name.charAt(0).toUpperCase() : ''}
+          const avatarStyle = favorite.icon ? 
+            `background-image: url('${favorite.icon}'); background-size: cover;` : 
+            '';
+          
+          const typeLabels = {
+            'channel': '📺 Canal',
+            'movie': '🎬 Filme', 
+            'series': '📺 Série',
+            'radio': '📻 Rádio'
+          };
+          
+          card.innerHTML = `
+            <div class="favorite-header">
+              <div class="favorite-avatar" style="${avatarStyle}">
+                ${!favorite.icon ? favorite.letter || favorite.name.charAt(0).toUpperCase() : ''}
               </div>
-              <div class="content-info">
-                <div class="content-name">${item.name}</div>
-                <div class="content-details">${item.category}</div>
+              <div class="favorite-info">
+                <h6>${favorite.name}</h6>
+                <small>
+                  ${typeLabels[favorite.type] || favorite.type}
+                  ${favorite.year ? ` • ${favorite.year}` : ''}
+                  ${favorite.rating ? ` • ⭐ ${favorite.rating}` : ''}
+                </small>
               </div>
-              ${isPlaying ? '<span class="playing-indicator">Tocando</span>' : ''}
-              <button class="favorite-btn active" onclick="event.stopPropagation(); app.toggleFavorite(${item.id})">
-                <i class="fas fa-heart"></i>
+            </div>
+            
+            <div class="favorite-actions">
+              <button class="play-btn" data-favorite-id="${favorite.id}" data-favorite-type="${favorite.type}">
+                <i class="fas fa-play"></i>
+                Reproduzir
+              </button>
+              <button class="remove-favorite" data-favorite-id="${favorite.id}" title="Remover">
+                <i class="fas fa-trash"></i>
               </button>
             </div>
           `;
-        }).join('');
+          
+          const playBtn = card.querySelector('.play-btn');
+          playBtn.addEventListener('click', () => {
+            this.favoritesBackend.updateLastAccessed(favorite.id);
+            this.playFavoriteItem(favorite);
+          });
+          
+          const removeBtn = card.querySelector('.remove-favorite');
+          removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (confirm(`Remover "${favorite.name}" dos favoritos?`)) {
+              this.toggleFavorite(favorite.id);
+            }
+          });
+          
+          favoritesList.appendChild(card);
+        });
       }
 
-      search(query) {
-        const searchResults = document.getElementById('searchResults');
+      updateAllFavoriteButtons() {
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+          const itemId = btn.dataset.id || btn.closest('.content-item').dataset.id;
+          if (itemId) {
+            const isFav = this.favoritesBackend.isFavorite(itemId);
+            btn.classList.toggle('active', isFav);
+          }
+        });
+      }
+
+      showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === 'success' ? '#28a745' : '#007bff'};
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          z-index: 10000;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          transform: translateX(100%);
+          transition: transform 0.3s ease;
+        `;
         
-        if (!query.trim()) {
-          searchResults.innerHTML = '';
-          return;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+          toast.style.transform = 'translateX(100%)';
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 3000);
+      }
+      
+      playFavoriteItem(favorite) {
+        if (favorite.type === 'channel') {
+          this.showContentSection('channels');
+          this.playChannel(favorite);
+          document.querySelector('[data-content="channels"]').classList.add('active');
+        } else if (favorite.type === 'movie') {
+          this.showContentSection('movies');
+          this.playMovie(favorite);
+          document.querySelector('[data-content="movies"]').classList.add('active');
+        } else if (favorite.type === 'series') {
+          this.showContentSection('series');
+          this.showSeriesEpisodes(favorite);
+          document.querySelector('[data-content="series"]').classList.add('active');
+        } else if (favorite.type === 'radio') {
+          this.showContentSection('radios');
+          this.playRadio(favorite);
+          document.querySelector('[data-content="radios"]').classList.add('active');
         }
+      }
+
+      performSearch(query) {
+        const resultsContainer = document.getElementById('searchResults');
         
-        const allItems = [
-          ...this.allContent.channels,
-          ...this.allContent.movies,
-          ...this.allContent.series,
-          ...this.allContent.radios
-        ];
-        
-        const results = allItems.filter(item => 
-          item.name.toLowerCase().includes(query.toLowerCase()) ||
-          item.category.toLowerCase().includes(query.toLowerCase())
-        );
-        
-        if (!results.length) {
-          searchResults.innerHTML = `
-            <div style="padding: 1rem; text-align: center; color: var(--text-secondary);">
-              <p>Nenhum resultado encontrado</p>
+        if (!query || query.length < 2) {
+          resultsContainer.innerHTML = `
+            <div class="text-center">
+              <i class="fas fa-search fa-2x mb-2" style="color: #666;"></i>
+              <p>Digite pelo menos 2 caracteres</p>
             </div>
           `;
           return;
         }
+
+        const searchChannels = document.getElementById('searchChannels').checked;
+        const searchMovies = document.getElementById('searchMovies').checked;
+        const searchSeries = document.getElementById('searchSeries').checked;
+        const searchRadios = document.getElementById('searchRadios').checked;
+
+        let results = [];
         
-        searchResults.innerHTML = results.map(item => `
-          <div class="content-item" onclick='app.playContent(${JSON.stringify(item).replace(/'/g, "\\'")})'>
-            <div class="content-avatar" ${item.logo ? `style="background-image: url('${item.logo}')"` : ''}>
-              ${!item.logo ? item.name.charAt(0).toUpperCase() : ''}
+        if (searchChannels) {
+          results.push(...this.channels.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase())
+          ));
+        }
+        
+        if (searchMovies) {
+          results.push(...this.movies.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase())
+          ));
+        }
+        
+        if (searchSeries) {
+          results.push(...this.series.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase())
+          ));
+        }
+        
+        if (searchRadios) {
+          results.push(...this.radios.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase())
+          ));
+        }
+
+        if (results.length === 0) {
+          resultsContainer.innerHTML = `
+            <div class="text-center p-4">
+              <p>Nenhum resultado para "${query}"</p>
             </div>
-            <div class="content-info">
-              <div class="content-name">${item.name}</div>
-              <div class="content-details">${item.category}</div>
+          `;
+          return;
+        }
+
+        resultsContainer.innerHTML = '';
+        results.slice(0, 50).forEach(item => {
+          const searchItem = document.createElement('div');
+          searchItem.className = 'search-item';
+          
+          const iconStyle = item.icon ? `background-image: url('${item.icon}'); background-size: cover;` : '';
+          
+          searchItem.innerHTML = `
+            <div class="item-icon" style="${iconStyle}">
+              ${!item.icon ? item.letter : ''}
             </div>
-          </div>
-        `).join('');
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-type">${this.getTypeLabel(item.type)}</div>
+            </div>
+          `;
+
+          searchItem.addEventListener('click', () => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('searchModal'));
+            modal.hide();
+            
+            if (item.type === 'channel') {
+              this.showContentSection('channels');
+              this.playChannel(item);
+            } else if (item.type === 'movie') {
+              this.showContentSection('movies');
+              this.playMovie(item);
+            } else if (item.type === 'series') {
+              this.showContentSection('series');
+              this.showSeriesEpisodes(item);
+            } else if (item.type === 'radio') {
+              this.showContentSection('radios');
+              this.playRadio(item);
+            }
+          });
+
+          resultsContainer.appendChild(searchItem);
+        });
+      }
+
+      getTypeLabel(type) {
+        const labels = {
+          'channel': 'Canal',
+          'movie': 'Filme',
+          'series': 'Série',
+          'radio': 'Rádio'
+        };
+        return labels[type] || type;
+      }
+
+      async savePlaylist() {
+        try {
+          const url = document.getElementById('playlistUrl').value.trim();
+          if (!url) {
+            this.showError('Por favor, insira uma URL válida');
+            return;
+          }
+
+          const newConfig = this.extractPlaylistInfo(url);
+          this.config = newConfig;
+          this.saveConfig();
+
+          const modal = bootstrap.Modal.getInstance(document.getElementById('playlistModal'));
+          modal.hide();
+          document.getElementById('playlistForm').reset();
+
+          this.cache.clear();
+
+          await Promise.all([
+            this.loadCategories(),
+            this.loadMovieCategories(),
+            this.loadSeriesCategories()
+          ]);
+
+          this.showSuccess('Playlist adicionada com sucesso!');
+        } catch (error) {
+          console.error('Erro ao salvar playlist:', error);
+          this.showError(error.message);
+        }
+      }
+
+      extractPlaylistInfo(url) {
+        try {
+          const urlObj = new URL(url);
+          const server = `${urlObj.protocol}//${urlObj.host}`;
+          const username = urlObj.searchParams.get('username');
+          const password = urlObj.searchParams.get('password');
+
+          if (!username || !password) {
+            throw new Error('Username ou password não encontrado');
+          }
+
+          return { server, username, password };
+        } catch (error) {
+          throw new Error('URL inválida');
+        }
+      }
+
+      shareApp() {
+        const shareUrl = window.location.href;
+        
+        if (navigator.share) {
+          navigator.share({
+            title: 'IPTV Player',
+            text: 'Assista canais, filmes e séries',
+            url: shareUrl
+          }).catch(console.error);
+        } else {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            this.showSuccess('Link copiado!');
+          }).catch(() => {
+            this.showError('Não foi possível copiar');
+          });
+        }
+      }
+
+      showErrorOverlay(message, retryCallback) {
+        const overlay = document.getElementById('errorOverlay');
+        const messageEl = document.getElementById('errorMessage');
+        
+        messageEl.textContent = message;
+        this.pendingRetryAction = retryCallback;
+        overlay.style.display = 'flex';
+      }
+
+      showError(message) {
+        alert('Erro: ' + message);
+      }
+
+      showSuccess(message) {
+        this.showToast(message, 'success');
+      }
+
+      async loadGames() {
+        try {
+          const games = [];
+          const gamesScroll = document.getElementById('gamesScroll');
+          gamesScroll.textContent = games.join(' • ');
+        } catch (error) {
+          console.error('Erro ao carregar jogos:', error);
+        }
       }
     }
 
-    // Initialize App
-    let app;
+    // Initialize app
+    let iptvApp;
     document.addEventListener('DOMContentLoaded', () => {
-      app = new IPTVApp();
+      loadTheme();
+      iptvApp = new IPTVApp();
     });
   </script>
+
 </body>
 </html>
