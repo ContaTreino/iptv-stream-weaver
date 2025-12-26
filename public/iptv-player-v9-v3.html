@@ -774,19 +774,20 @@
   .epg-line {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    margin-top: 1.5rem;
-    margin-left: -50px;
-    padding: 0.5rem 0.75rem;
-    background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.15), rgba(0, 0, 0, 0.3));
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.2), rgba(0, 0, 0, 0.4));
     border-radius: 0.5rem;
-    border-left: 3px solid var(--primary-color);
-    font-size: 0.75rem;
+    border-left: 4px solid var(--primary-color);
+    font-size: 0.8rem;
     animation: fadeIn 0.3s ease;
     overflow: hidden;
-    width: 100%; /* CORRIGIDO: largura total */
-    flex-basis: 100%; /* CORRIGIDO: força nova linha */
-    order: 10; /* CORRIGIDO: vai para o final */
+    width: calc(100% + 50px); /* Expande para compensar o margin-left negativo */
+    margin-left: -50px; /* Alinha com o início do content-item */
+    flex-basis: 100%;
+    order: 10;
+    box-sizing: border-box;
   }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
