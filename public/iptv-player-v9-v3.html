@@ -770,16 +770,17 @@
     50% { opacity: 0.7; }
   }
   
-  /* EPG Info Styles - Layout exato da imagem de referência */
+  /* EPG Info Styles - Nova linha após Reproduzindo agora */
   .epg-line {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    margin-top: 0.75rem;
-    padding: 0.85rem 1.1rem;
-    background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.2), rgba(0, 0, 0, 0.4));
-    border-radius: 0.7rem;
-    font-size: 0.85rem;
+    gap: 0.3rem;
+    margin-top: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.15), rgba(0, 0, 0, 0.3));
+    border-radius: 0.4rem;
+    border-left: 3px solid var(--primary-color);
+    font-size: 0.75rem;
     animation: fadeIn 0.3s ease;
     overflow: hidden;
     width: calc(100% + 50px);
@@ -809,14 +810,14 @@
   .epg-line-current {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.4rem;
     width: 100%;
   }
   
-  /* Ícone de play vermelho/rosa para programa atual */
+  /* Ícone de play para programa atual */
   .epg-line-icon {
-    color: #d32f2f;
-    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-size: 0.7rem;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -838,7 +839,9 @@
     font-weight: 600;
     white-space: nowrap;
     display: inline-block;
-    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
   }
   
   /* Animação de deslize contínuo para títulos longos */
@@ -848,25 +851,28 @@
   }
   
   .epg-title-wrapper.overflow .epg-line-program {
-    animation: epgMarquee 10s linear infinite;
-    animation-delay: 2s;
-    padding-right: 3rem;
+    animation: marquee 8s linear infinite;
+    padding-right: 2rem;
+    max-width: none;
   }
   .epg-title-wrapper.overflow .epg-line-program::after {
     content: attr(data-title);
     position: absolute;
-    left: calc(100% + 3rem);
+    left: 100%;
+    padding-left: 2rem;
     white-space: nowrap;
   }
   
-  /* Horário alinhado à direita */
+  /* Horário alinhado à direita com background */
   .epg-line-time {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
+    font-size: 0.65rem;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.3rem;
     white-space: nowrap;
     flex-shrink: 0;
-    margin-left: auto;
-    font-weight: 500;
   }
   .epg-line-loading {
     color: rgba(255, 255, 255, 0.5);
@@ -880,29 +886,23 @@
     to { transform: rotate(360deg); }
   }
   
-  /* Linha pontilhada separadora */
-  .epg-line-separator {
-    width: 100%;
-    height: 1px;
-    border: none;
-    border-top: 1px dashed rgba(255, 255, 255, 0.25);
-    margin: 0;
-  }
-  
   /* A Seguir - linha separada abaixo */
   .epg-line-next {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.85);
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.08);
     width: 100%;
   }
   
-  /* Ícone de relógio rosa/vermelho para "A seguir" */
+  /* Ícone de relógio para "A seguir" */
   .epg-line-next-icon {
-    color: #c62828;
-    font-size: 0.8rem;
+    color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
+    font-size: 0.6rem;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -910,9 +910,8 @@
   
   .epg-line-next-label {
     font-weight: 500;
-    color: #c62828;
+    color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
     flex-shrink: 0;
-    font-size: 0.85rem;
   }
   
   /* Container para animação do título "A seguir" */
@@ -928,14 +927,15 @@
   .epg-line-next-title {
     white-space: nowrap;
     display: inline-block;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   /* Horário do próximo programa */
   .epg-line-next-time {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85rem;
+    font-size: 0.65rem;
+    color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
     white-space: nowrap;
     flex-shrink: 0;
     margin-left: auto;
@@ -3609,7 +3609,6 @@ function loadPageBackground() {
           if (epgData.next) {
             const nextStart = this.formatEPGTime(epgData.next.start);
             epgHTML += `
-              <hr class="epg-line-separator">
               <div class="epg-line-next">
                 <i class="fas fa-clock epg-line-next-icon"></i>
                 <span class="epg-line-next-label">A seguir:</span>
