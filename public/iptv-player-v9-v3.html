@@ -770,15 +770,15 @@
     50% { opacity: 0.7; }
   }
   
-  /* EPG Info Styles - Layout similar à imagem de referência */
+  /* EPG Info Styles - Layout exato da imagem de referência */
   .epg-line {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
     margin-top: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: rgba(0, 0, 0, 0.35);
-    border-radius: 0.6rem;
+    padding: 0.85rem 1.1rem;
+    background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.2), rgba(0, 0, 0, 0.4));
+    border-radius: 0.7rem;
     font-size: 0.85rem;
     animation: fadeIn 0.3s ease;
     overflow: hidden;
@@ -787,7 +787,6 @@
     flex-basis: 100%;
     order: 10;
     box-sizing: border-box;
-    border: 1px solid rgba(255, 255, 255, 0.08);
   }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
@@ -810,14 +809,14 @@
   .epg-line-current {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     width: 100%;
   }
   
-  /* Ícone de play vermelho para programa atual */
+  /* Ícone de play vermelho/rosa para programa atual */
   .epg-line-icon {
-    color: #e53935;
-    font-size: 0.75rem;
+    color: #d32f2f;
+    font-size: 0.9rem;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -839,7 +838,7 @@
     font-weight: 600;
     white-space: nowrap;
     display: inline-block;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   
   /* Animação de deslize contínuo para títulos longos */
@@ -862,8 +861,8 @@
   
   /* Horário alinhado à direita */
   .epg-line-time {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
     white-space: nowrap;
     flex-shrink: 0;
     margin-left: auto;
@@ -881,23 +880,29 @@
     to { transform: rotate(360deg); }
   }
   
+  /* Linha pontilhada separadora */
+  .epg-line-separator {
+    width: 100%;
+    height: 1px;
+    border: none;
+    border-top: 1px dashed rgba(255, 255, 255, 0.25);
+    margin: 0;
+  }
+  
   /* A Seguir - linha separada abaixo */
   .epg-line-next {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.75);
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
     width: 100%;
-    padding-top: 0.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 0.25rem;
   }
   
-  /* Ícone de relógio laranja para "A seguir" */
+  /* Ícone de relógio rosa/vermelho para "A seguir" */
   .epg-line-next-icon {
-    color: #ff9800;
-    font-size: 0.7rem;
+    color: #c62828;
+    font-size: 0.8rem;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -905,9 +910,9 @@
   
   .epg-line-next-label {
     font-weight: 500;
-    color: #ff9800;
+    color: #c62828;
     flex-shrink: 0;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
   
   /* Container para animação do título "A seguir" */
@@ -923,14 +928,14 @@
   .epg-line-next-title {
     white-space: nowrap;
     display: inline-block;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 500;
   }
   
   /* Horário do próximo programa */
   .epg-line-next-time {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
     white-space: nowrap;
     flex-shrink: 0;
     margin-left: auto;
@@ -3603,15 +3608,15 @@ function loadPageBackground() {
           // Adicionar linha do próximo programa se disponível
           if (epgData.next) {
             const nextStart = this.formatEPGTime(epgData.next.start);
-            const nextEnd = this.formatEPGTime(epgData.next.end);
             epgHTML += `
+              <hr class="epg-line-separator">
               <div class="epg-line-next">
-                <i class="fas fa-clock epg-line-icon"></i>
+                <i class="fas fa-clock epg-line-next-icon"></i>
                 <span class="epg-line-next-label">A seguir:</span>
                 <div class="epg-next-title-wrapper">
                   <span class="epg-line-next-title" data-title="${this.escapeHtml(epgData.next.title)}">${epgData.next.title}</span>
                 </div>
-                <span class="epg-line-time">${nextStart}</span>
+                <span class="epg-line-next-time">${nextStart}</span>
               </div>
             `;
           }
