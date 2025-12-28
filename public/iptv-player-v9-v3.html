@@ -778,7 +778,7 @@
     margin-top: 0.4rem;
     padding: 0.4rem 0.6rem;
     background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.15), rgba(0, 0, 0, 0.3));
-    border-radius: 0.4rem;
+    border-radius: 0;
     border-left: 3px solid var(--primary-color);
     font-size: 0.75rem;
     animation: fadeIn 0.3s ease;
@@ -786,38 +786,12 @@
     order: 10;
     flex-basis: 100%;
     box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  /* Responsividade do EPG para diferentes telas */
-  @media (max-width: 480px) {
-    .epg-line {
-      font-size: 0.7rem;
-      padding: 0.3rem 0.5rem;
-    }
-    .epg-line-program,
-    .epg-line-next-title {
-      font-size: 0.68rem;
-    }
-    .epg-line-time,
-    .epg-line-next-time {
-      font-size: 0.6rem;
-    }
-  }
-  
-  @media (min-width: 481px) and (max-width: 768px) {
-    .epg-line {
-      font-size: 0.72rem;
-      padding: 0.35rem 0.55rem;
-    }
-  }
-  
-  @media (min-width: 769px) {
-    .epg-line {
-      font-size: 0.75rem;
-      padding: 0.4rem 0.6rem;
-    }
+    /* Ocupa toda a largura compensando o padding do .content-item */
+    width: calc(100% + clamp(1rem, 4vw, 2rem));
+    margin-left: calc(-1 * clamp(0.5rem, 2vw, 1rem));
+    margin-right: calc(-1 * clamp(0.5rem, 2vw, 1rem));
+    padding-left: clamp(0.5rem, 2vw, 1rem);
+    padding-right: clamp(0.5rem, 2vw, 1rem);
   }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
