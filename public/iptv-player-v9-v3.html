@@ -774,19 +774,19 @@
   .epg-line {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    margin-top: 0.4rem;
-    padding: 0.3rem 0.6rem;
+    gap: -1.4rem;
+    margin-top: 0.0rem;
+    padding: -10.4rem 0.6rem;
     background: linear-gradient(135deg, rgba(var(--primary-color-rgb, 0, 123, 255), 0.15), rgba(0, 0, 0, 0.3));
     border-radius: 0.4rem;
     border-left: 3px solid var(--primary-color);
     font-size: 0.75rem;
     animation: fadeIn 0.3s ease;
-    overflow: hidden;
-    width: calc(100% + 50px);
     margin-left: -50px;
-    flex-basis: 100%;
+    width: calc(250% + 150%); /* Expande para compensar o margin-left negativo */
+    overflow: hidden;
     order: 10;
+    flex-basis: 100%;
     box-sizing: border-box;
   }
   @keyframes fadeIn {
@@ -819,9 +819,6 @@
     color: var(--primary-color);
     font-size: 0.7rem;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   
   /* Container para animação de título */
@@ -835,13 +832,10 @@
   }
   
   .epg-line-program {
-    color: #ffffff;
+    color: var(--text-primary);
     font-weight: 600;
     white-space: nowrap;
     display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
   }
   
   /* Animação de deslize contínuo para títulos longos */
@@ -851,28 +845,24 @@
   }
   
   .epg-title-wrapper.overflow .epg-line-program {
-    animation: marquee 8s linear infinite;
-    padding-right: 2rem;
-    max-width: none;
+    animation: epgMarquee 10s linear infinite;
+    animation-delay: 2s;
+    padding-right: 3rem;
   }
   .epg-title-wrapper.overflow .epg-line-program::after {
     content: attr(data-title);
     position: absolute;
-    left: 100%;
-    padding-left: 2rem;
+    left: calc(100% + 3rem);
     white-space: nowrap;
   }
   
-  /* Horário alinhado à direita com background */
+  /* Horário alinhado à direita */
   .epg-line-time {
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.65rem;
-    color: var(--text-secondary, rgba(255, 255, 255, 0.7));
-    margin-left: auto;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.15rem 0.4rem;
-    border-radius: 0.3rem;
     white-space: nowrap;
     flex-shrink: 0;
+    margin-left: auto;
   }
   .epg-line-loading {
     color: rgba(255, 255, 255, 0.5);
@@ -891,26 +881,18 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.68rem;
-    color: var(--text-secondary, rgba(255, 255, 255, 0.6));
-    margin-top: 0.35rem;
-    padding-top: 0.35rem;
-    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.6);
+    padding-top: -1.25rem;
+    margin-top: 0.2rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.15);
     width: 100%;
   }
   
-  /* Ícone de relógio para "A seguir" */
-  .epg-line-next-icon {
-    color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
-    font-size: 0.6rem;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-  }
-  
+  /* Label "A seguir:" */
   .epg-line-next-label {
-    font-weight: 500;
-    color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
     flex-shrink: 0;
   }
   
@@ -927,18 +909,7 @@
   .epg-line-next-title {
     white-space: nowrap;
     display: inline-block;
-    color: var(--text-secondary, rgba(255, 255, 255, 0.7));
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  /* Horário do próximo programa */
-  .epg-line-next-time {
-    font-size: 0.65rem;
-    color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin-left: auto;
+    color: rgba(255, 255, 255, 0.8);
   }
   
   /* Animação de deslize para títulos longos do "A seguir" */
@@ -952,6 +923,15 @@
     position: absolute;
     left: calc(100% + 3rem);
     white-space: nowrap;
+  }
+  
+  /* Horário do próximo programa */
+  .epg-line-next-time {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
   }
   
   .epg-current-title {
