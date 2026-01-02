@@ -410,6 +410,7 @@
         .item {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             padding: 12px;
             background: linear-gradient(145deg, var(--card-bg), #222);
             border-radius: var(--border-radius);
@@ -466,6 +467,162 @@
             font-weight: 500;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
+
+        /* ==================================================
+           ============ EPG STYLES - INICIO ===============
+           MODIFICAR: Estilos do EPG (Guia de Programação)
+           ================================================== */
+        
+        /* MODIFICAR: Container principal do EPG - ocupa largura total */
+        .epg-line {
+            width: 100%;
+            flex-basis: 100%;
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, rgba(204, 24, 24, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-red);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-sizing: border-box;
+        }
+
+        /* MODIFICAR: Linha do programa atual */
+        .epg-current {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: #fff;
+        }
+
+        /* MODIFICAR: Badge "AO VIVO" */
+        .epg-live-badge {
+            background: var(--primary-red);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* MODIFICAR: Horário do programa */
+        .epg-time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75em;
+            white-space: nowrap;
+        }
+
+        /* MODIFICAR: Título do programa atual com marquee */
+        .epg-title {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+
+        .epg-title.marquee {
+            animation: marquee 10s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* MODIFICAR: Barra de progresso do programa */
+        .epg-progress-container {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 4px 0;
+        }
+
+        .epg-progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+
+        /* MODIFICAR: Linha do próximo programa */
+        .epg-next {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .epg-next-label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.7em;
+        }
+
+        /* ==================================================
+           ============ EPG STYLES - RESPONSIVO ============
+           MODIFICAR: Media queries para diferentes telas
+           ================================================== */
+        
+        /* MODIFICAR: EPG em telas pequenas (celular) */
+        @media (max-width: 480px) {
+            .epg-line {
+                padding: 6px 8px;
+                margin-top: 6px;
+            }
+            .epg-current {
+                font-size: 0.8em;
+            }
+            .epg-live-badge {
+                font-size: 0.65em;
+                padding: 1px 4px;
+            }
+            .epg-next {
+                font-size: 0.7em;
+            }
+        }
+
+        /* MODIFICAR: EPG em tablets */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .epg-line {
+                padding: 8px 10px;
+            }
+        }
+
+        /* MODIFICAR: EPG em modo landscape */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .epg-line {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+            }
+            .epg-current {
+                flex: 1;
+            }
+            .epg-progress-container {
+                flex-basis: 100%;
+                order: 3;
+            }
+            .epg-next {
+                flex: 1;
+            }
+        }
+
+        /* ==================================================
+           ============ EPG STYLES - FIM ==================
+           ================================================== */
 
         .loading-overlay {
             position: fixed;
@@ -689,6 +846,77 @@
             const currentUrlDisplay = document.getElementById('currentUrlDisplay');
             const currentUrlText = document.getElementById('currentUrlText');
             const welcomeMessage = document.getElementById('welcomeMessage');
+
+            // ==================================================
+            // ============ PROXY SYSTEM - INICIO ===============
+            // MODIFICAR: Sistema de proxy opcional para contornar CORS
+            // Para usar: descomente a linha PROXY_LIST_URL e adicione o link raw do GitHub
+            // O arquivo deve conter um IP por linha no formato: http://ip:porta ou https://ip:porta
+            // ==================================================
+            
+            // MODIFICAR: Descomente a linha abaixo e adicione o link raw do GitHub com a lista de proxies
+            // const PROXY_LIST_URL = 'https://raw.githubusercontent.com/seu-usuario/seu-repo/main/proxy.txt';
+            
+            let proxyList = [];
+            let currentProxyIndex = 0;
+            let proxyEnabled = false;
+
+            // MODIFICAR: Função para carregar lista de proxies do GitHub
+            async function loadProxyList() {
+                if (typeof PROXY_LIST_URL === 'undefined' || !PROXY_LIST_URL) {
+                    proxyEnabled = false;
+                    return;
+                }
+                
+                try {
+                    const response = await axios.get(PROXY_LIST_URL, { timeout: 10000 });
+                    const lines = response.data.split('\n').filter(line => line.trim());
+                    proxyList = lines.map(line => line.trim()).filter(line => 
+                        line.startsWith('http://') || line.startsWith('https://')
+                    );
+                    
+                    if (proxyList.length > 0) {
+                        proxyEnabled = true;
+                        currentProxyIndex = 0;
+                    }
+                } catch (error) {
+                    proxyEnabled = false;
+                }
+            }
+
+            // MODIFICAR: Função para obter o próximo proxy da lista (rotação)
+            function getNextProxy() {
+                if (!proxyEnabled || proxyList.length === 0) return null;
+                
+                const proxy = proxyList[currentProxyIndex];
+                currentProxyIndex = (currentProxyIndex + 1) % proxyList.length;
+                return proxy;
+            }
+
+            // MODIFICAR: Função para aplicar proxy na URL
+            function applyProxyToUrl(originalUrl) {
+                if (!proxyEnabled) return originalUrl;
+                
+                const proxy = getNextProxy();
+                if (!proxy) return originalUrl;
+                
+                // Formato: proxy/url_original
+                return `${proxy}/${encodeURIComponent(originalUrl)}`;
+            }
+
+            // MODIFICAR: Função para resetar índice do proxy quando um funciona
+            function markProxyAsWorking() {
+                // O proxy atual funcionou, não precisa fazer nada especial
+            }
+
+            // MODIFICAR: Função para marcar proxy como falho e tentar próximo
+            function markProxyAsFailed() {
+                // O índice já foi incrementado em getNextProxy, então o próximo será usado
+            }
+
+            // ==================================================
+            // ============ PROXY SYSTEM - FIM ==================
+            // ==================================================
             
             // ========== CONFIGURAÇÃO DO PLAYER (ORIGINAL) ==========
             const player = videojs('videoPlayer', {
@@ -1050,7 +1278,7 @@
                         throw new Error('Nenhuma categoria encontrada');
                     }
                 } catch (error) {
-                    // Sem logs “robustos” por padrão.
+                    // Sem logs "robustos" por padrão.
                     debugError('Erro ao buscar categorias:', error);
                     showError('Erro ao carregar categorias. Verifique a URL/credenciais e se o servidor permite acesso via navegador.');
                 } finally {
@@ -1090,7 +1318,161 @@
                 }
             }
 
-            // ========== DISPLAY CATEGORY (ORIGINAL) ==========
+            // ==================================================
+            // ============ EPG FUNCTIONS - INICIO ==============
+            // MODIFICAR: Funções para buscar e exibir EPG
+            // ==================================================
+
+            // MODIFICAR: Cache de EPG para evitar requisições repetidas
+            let epgCache = {};
+            let epgUpdateIntervals = {};
+
+            // MODIFICAR: Função para buscar EPG de um canal
+            async function fetchEPG(streamId) {
+                if (epgCache[streamId] && epgCache[streamId].fetchedAt > Date.now() - 300000) {
+                    return epgCache[streamId].data;
+                }
+
+                try {
+                    const response = await axios.get(
+                        `${urlOrigin}/player_api.php?username=${username}&password=${password}&action=get_short_epg&stream_id=${streamId}&limit=2`,
+                        { timeout: 10000 }
+                    );
+
+                    if (response.data && response.data.epg_listings && response.data.epg_listings.length > 0) {
+                        epgCache[streamId] = {
+                            data: response.data.epg_listings,
+                            fetchedAt: Date.now()
+                        };
+                        return response.data.epg_listings;
+                    }
+                } catch (error) {
+                    // Silently fail - EPG is optional
+                }
+
+                return null;
+            }
+
+            // MODIFICAR: Função para formatar horário do EPG
+            function formatEPGTime(timestamp) {
+                if (!timestamp) return '';
+                const date = new Date(parseInt(timestamp) * 1000);
+                return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            // MODIFICAR: Função para calcular progresso do programa
+            function calculateProgress(startTimestamp, endTimestamp) {
+                if (!startTimestamp || !endTimestamp) return 0;
+                
+                const now = Date.now() / 1000;
+                const start = parseInt(startTimestamp);
+                const end = parseInt(endTimestamp);
+                
+                if (now < start) return 0;
+                if (now > end) return 100;
+                
+                return Math.round(((now - start) / (end - start)) * 100);
+            }
+
+            // MODIFICAR: Função para decodificar título do EPG (base64)
+            function decodeEPGTitle(title) {
+                if (!title) return '';
+                try {
+                    return decodeURIComponent(escape(atob(title)));
+                } catch (e) {
+                    return title;
+                }
+            }
+
+            // MODIFICAR: Função para criar elemento EPG
+            function createEPGElement(epgData, itemDiv) {
+                // Remove EPG existente
+                const existingEpg = itemDiv.querySelector('.epg-line');
+                if (existingEpg) existingEpg.remove();
+
+                if (!epgData || epgData.length === 0) return;
+
+                const epgLine = document.createElement('div');
+                epgLine.className = 'epg-line';
+
+                const currentProgram = epgData[0];
+                const nextProgram = epgData[1];
+
+                // Programa atual
+                if (currentProgram) {
+                    const currentDiv = document.createElement('div');
+                    currentDiv.className = 'epg-current';
+
+                    const liveBadge = document.createElement('span');
+                    liveBadge.className = 'epg-live-badge';
+                    liveBadge.textContent = 'AO VIVO';
+
+                    const timeSpan = document.createElement('span');
+                    timeSpan.className = 'epg-time';
+                    timeSpan.textContent = `${formatEPGTime(currentProgram.start)} - ${formatEPGTime(currentProgram.end)}`;
+
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = 'epg-title';
+                    titleSpan.textContent = decodeEPGTitle(currentProgram.title);
+
+                    currentDiv.appendChild(liveBadge);
+                    currentDiv.appendChild(timeSpan);
+                    currentDiv.appendChild(titleSpan);
+                    epgLine.appendChild(currentDiv);
+
+                    // Barra de progresso
+                    const progressContainer = document.createElement('div');
+                    progressContainer.className = 'epg-progress-container';
+                    
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'epg-progress-bar';
+                    progressBar.style.width = `${calculateProgress(currentProgram.start, currentProgram.end)}%`;
+                    
+                    progressContainer.appendChild(progressBar);
+                    epgLine.appendChild(progressContainer);
+                }
+
+                // Próximo programa
+                if (nextProgram) {
+                    const nextDiv = document.createElement('div');
+                    nextDiv.className = 'epg-next';
+
+                    const nextLabel = document.createElement('span');
+                    nextLabel.className = 'epg-next-label';
+                    nextLabel.textContent = 'A seguir:';
+
+                    const nextTime = document.createElement('span');
+                    nextTime.className = 'epg-time';
+                    nextTime.textContent = formatEPGTime(nextProgram.start);
+
+                    const nextTitle = document.createElement('span');
+                    nextTitle.className = 'epg-title';
+                    nextTitle.textContent = decodeEPGTitle(nextProgram.title);
+
+                    nextDiv.appendChild(nextLabel);
+                    nextDiv.appendChild(nextTime);
+                    nextDiv.appendChild(nextTitle);
+                    epgLine.appendChild(nextDiv);
+                }
+
+                itemDiv.appendChild(epgLine);
+            }
+
+            // MODIFICAR: Função para atualizar progresso do EPG
+            function updateEPGProgress(itemDiv, epgData) {
+                if (!epgData || epgData.length === 0) return;
+
+                const progressBar = itemDiv.querySelector('.epg-progress-bar');
+                if (progressBar && epgData[0]) {
+                    progressBar.style.width = `${calculateProgress(epgData[0].start, epgData[0].end)}%`;
+                }
+            }
+
+            // ==================================================
+            // ============ EPG FUNCTIONS - FIM =================
+            // ==================================================
+
+            // ========== DISPLAY CATEGORY (ORIGINAL - COM EPG) ==========
             function displayCategory(categoryName, items) {
                 if (displayedCategories.has(categoryName)) {
                     return;
@@ -1118,6 +1500,7 @@
                 items.forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'item';
+                    itemDiv.dataset.streamId = item.stream_id;
 
                     const itemImg = document.createElement('img');
                     itemImg.src = item.stream_icon || 'https://i.ibb.co/wYHRkPj/Text-Toos-Apk.png';
@@ -1131,6 +1514,21 @@
 
                     itemDiv.appendChild(itemImg);
                     itemDiv.appendChild(itemName);
+
+                    // MODIFICAR: Busca EPG ao exibir o item
+                    if (item.epg_channel_id) {
+                        fetchEPG(item.stream_id).then(epgData => {
+                            if (epgData) {
+                                createEPGElement(epgData, itemDiv);
+                                
+                                // Atualiza progresso a cada 30 segundos
+                                const intervalId = setInterval(() => {
+                                    updateEPGProgress(itemDiv, epgData);
+                                }, 30000);
+                                epgUpdateIntervals[item.stream_id] = intervalId;
+                            }
+                        });
+                    }
 
                     itemDiv.addEventListener('click', () => {
                         playVideo(item);
@@ -1306,6 +1704,9 @@
             });
 
             // ========== INICIALIZAÇÃO (NOVO) ==========
+            // Carrega lista de proxies (se configurada)
+            loadProxyList();
+            
             // Verifica se há URL salva no localStorage
             const savedUrl = localStorage.getItem('tvsilva_playlist_url');
             if (savedUrl) {
