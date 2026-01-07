@@ -1,45 +1,46 @@
 
 # -*- coding: utf-8 -*-
 # ═══════════════════════════════════════════════════════════════
-# CPANEL LOGIN CHECKER - EDIÇÃO AVANÇADA BASEADA EM PESQUISA V4.0
+# CPANEL LOGIN CHECKER - ADVANCED RESEARCH-BASED EDITION V4.0
 # ═══════════════════════════════════════════════════════════════
-# DESENVOLVEDOR: SAMURAI KENZ
+# CODER: SAMURAI KENZ
 # WEBSITE: W3LLSTORE.COM
 # TELEGRAM: @W3LLSTORE_ADMIN
-# TELEGRAM REDE: https://t.me/setupp_inbox
+# TELEGRAM NETWORK: https://t.me/setupp_inbox
 # ═══════════════════════════════════════════════════════════════
-# OTIMIZAÇÕES BASEADAS EM PESQUISA DE FONTES OFICIAIS:
+# RESEARCH-BASED OPTIMIZATIONS FROM OFFICIAL SOURCES:
 # 
-# [1] - Métodos de Autenticação da API cPanel:
-#   • Autenticação baseada em sessão com tokens de segurança
-#   • Validação de autenticação baseada em cookies
-#   • Métodos de autenticação por token de API
-#   Fonte: https://api.docs.cpanel.net/guides/guide-to-api-authentication/
+# [1] - cPanel API Authentication Methods:
+#   • Session-based authentication with security tokens
+#   • Cookie-based authentication validation
+#   • API token authentication methods
+#   Source: https://api.docs.cpanel.net/guides/guide-to-api-authentication/
 #
-# [2] - Segurança cPanel e Validação de Cookies:
-#   • Validação de IP do cookie para segurança da sessão
-#   • Inserção de token de segurança em URLs (cpsess)
-#   • Mecanismos de validação de cookie de sessão
-#   Fonte: https://docs.cpanel.net/knowledge-base/security/basic-security-concepts/
+# [2] - cPanel Security & Cookie Validation:
+#   • Cookie IP validation for session security
+#   • Security token insertion in URLs (cpsess)
+#   • Session cookie validation mechanisms
+#   Source: https://docs.cpanel.net/knowledge-base/security/basic-security-concepts/
 #
-# [3] - Melhores Práticas de Connection Pooling aiohttp:
-#   • Gerenciamento de sessão para reutilização de conexão
-#   • Connection pooling para otimização de desempenho
-#   • Configuração de timeout e tratamento de erros
-#   Fonte: https://calmops.com/programming/python/asynchronous-http-requests-aiohttp/
+# [3] - aiohttp Connection Pooling Best Practices:
+#   • Session management for connection reuse
+#   • Connection pooling for performance optimization
+#   • Timeout configuration and error handling
+#   Source: https://calmops.com/programming/python/asynchronous-http-requests-aiohttp/
 #
-# [4] - Configuração de Portas SSL cPanel:
-#   • Porta 2083: Serviço cPanel sobre SSL
-#   • Porta 2087: Serviço WHM sobre SSL
-#   • Porta 2096: Serviço Webmail sobre SSL
-#   Fonte: https://docs.cpanel.net/knowledge-base/general-systems-administration/
+# [4] - cPanel SSL Ports Configuration:
+#   • Port 2083: cPanel service over SSL
+#   • Port 2087: WHM service over SSL
+#   • Port 2096: Webmail service over SSL
+#   Source: https://docs.cpanel.net/knowledge-base/general-systems-administration/
 # ═══════════════════════════════════════════════════════════════
 
 # ═══════════════════════════════════════════════════════════════
-# MODIFICAR: DIRETÓRIO PADRÃO PARA BUSCA DE ARQUIVOS
+# MODIFICAR: DIRETÓRIO PADRÃO PARA BUSCA DE ARQUIVOS COMBO
 # Altere o caminho abaixo para o diretório onde seus arquivos estão
 # ═══════════════════════════════════════════════════════════════
 DEFAULT_COMBO_DIR = "/sdcard/combo"  # MODIFICAR: Diretório padrão para buscar combos
+COMBO_EXTENSIONS = ['.txt', '.csv', '.log']  # MODIFICAR: Extensões de arquivo permitidas
 
 import os
 import sys
@@ -66,7 +67,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # ═══════════════════════════════════════════════════════════════
-# ESQUEMA DE CORES RGB CYBERPUNK - FUTURÍSTICO APRIMORADO
+# CYBERPUNK RGB COLOR SCHEME - ENHANCED FUTURISTIC
 # ═══════════════════════════════════════════════════════════════
 class CyberColors:
     BG_DARK = "#0a0e27"
@@ -97,8 +98,8 @@ class CyberColors:
         return random.choice(colors)
 
 # ═══════════════════════════════════════════════════════════════
-# CLASSES DE DADOS PARA VALIDAÇÃO ESTRUTURADA
-# Baseado em [1] & [2] - Autenticação Oficial cPanel
+# DATA CLASSES FOR STRUCTURED VALIDATION
+# Based on [1] & [2] - Official cPanel Authentication
 # ═══════════════════════════════════════════════════════════════
 @dataclass
 class ValidationResult:
@@ -1005,7 +1006,7 @@ class CpanelCheckerEngine:
             self.is_running = False
 
 # ═══════════════════════════════════════════════════════════════
-# GUI CYBERPUNK COM EFEITOS RGB AVANÇADOS E ANIMAÇÕES
+# CYBERPUNK GUI WITH ADVANCED RGB EFFECTS & ANIMATIONS
 # ═══════════════════════════════════════════════════════════════
 class CyberpunkGUI:
     def __init__(self, root):
@@ -1612,48 +1613,263 @@ class CyberpunkGUI:
         self.update_stats()
     
     def browse_file(self):
-        """Buscar e selecionar arquivo - abre no diretório /sdcard/combo por padrão"""
-        # MODIFICAR: Define o diretório inicial para busca de arquivos
-        initial_dir = DEFAULT_COMBO_DIR if os.path.exists(DEFAULT_COMBO_DIR) else os.path.expanduser("~")
+        """Mostrar lista de arquivos da pasta /sdcard/combo"""
+        self.show_combo_file_selector()
+    
+    def show_combo_file_selector(self):
+        """
+        ═══════════════════════════════════════════════════════════════
+        MODIFICAR: SELETOR DE ARQUIVOS DA PASTA COMBO
+        Esta função exibe uma janela com a lista de arquivos disponíveis
+        no diretório DEFAULT_COMBO_DIR (/sdcard/combo)
+        ═══════════════════════════════════════════════════════════════
+        """
+        # Criar janela de seleção
+        selector = tk.Toplevel(self.root)
+        selector.title("📁 Selecionar Arquivo - /sdcard/combo")
+        selector.geometry("700x500")
+        selector.configure(bg=CyberColors.BG_DARK)
+        selector.transient(self.root)
+        selector.grab_set()
         
-        filename = filedialog.askopenfilename(
-            title="Selecione a Lista de Alvos cPanel",
-            initialdir=initial_dir,  # MODIFICAR: Abre automaticamente no /sdcard/combo
-            filetypes=[
-                ("Arquivos de Texto", "*.txt"),
-                ("Arquivos CSV", "*.csv"),
-                ("Todos os Arquivos", "*.*")
-            ]
+        # Centralizar janela
+        selector.update_idletasks()
+        x = (selector.winfo_screenwidth() // 2) - (350)
+        y = (selector.winfo_screenheight() // 2) - (250)
+        selector.geometry(f"700x500+{x}+{y}")
+        
+        # Frame do cabeçalho
+        header_frame = tk.Frame(selector, bg=CyberColors.BG_DARKER)
+        header_frame.pack(fill=tk.X, padx=0, pady=0)
+        
+        tk.Label(
+            header_frame,
+            text="📁 ARQUIVOS DISPONÍVEIS",
+            font=("Courier New", 16, "bold"),
+            bg=CyberColors.BG_DARKER,
+            fg=CyberColors.NEON_CYAN
+        ).pack(pady=15)
+        
+        tk.Label(
+            header_frame,
+            text=f"Diretório: {DEFAULT_COMBO_DIR}",
+            font=("Courier New", 10),
+            bg=CyberColors.BG_DARKER,
+            fg=CyberColors.TEXT_GRAY
+        ).pack(pady=5)
+        
+        # Frame da lista de arquivos
+        list_frame = tk.Frame(selector, bg=CyberColors.PANEL_BG)
+        list_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
+        
+        # Scrollbar
+        scrollbar = tk.Scrollbar(list_frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        # Listbox com arquivos
+        file_listbox = tk.Listbox(
+            list_frame,
+            font=("Courier New", 12),
+            bg=CyberColors.BG_DARK,
+            fg=CyberColors.NEON_GREEN,
+            selectbackground=CyberColors.NEON_PURPLE,
+            selectforeground=CyberColors.TEXT_WHITE,
+            highlightbackground=CyberColors.NEON_CYAN,
+            highlightthickness=2,
+            yscrollcommand=scrollbar.set,
+            height=15
         )
-        if filename:
-            self.file_entry.delete(0, tk.END)
-            self.file_entry.insert(0, filename)
-            self.log_message(f"✓ Arquivo selecionado: {filename}", "green")
-            self.status_label.config(
-                text=f"⚡ ARQUIVO CARREGADO: {os.path.basename(filename)}",
-                fg=CyberColors.NEON_GREEN
+        file_listbox.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        scrollbar.config(command=file_listbox.yview)
+        
+        # Carregar arquivos do diretório
+        files_found = []
+        if os.path.exists(DEFAULT_COMBO_DIR):
+            try:
+                for filename in os.listdir(DEFAULT_COMBO_DIR):
+                    filepath = os.path.join(DEFAULT_COMBO_DIR, filename)
+                    if os.path.isfile(filepath):
+                        # Verificar extensão
+                        ext = os.path.splitext(filename)[1].lower()
+                        if ext in COMBO_EXTENSIONS or not COMBO_EXTENSIONS:
+                            # Obter tamanho do arquivo
+                            size = os.path.getsize(filepath)
+                            size_str = self.format_file_size(size)
+                            files_found.append((filename, filepath, size_str))
+                
+                # Ordenar por nome
+                files_found.sort(key=lambda x: x[0].lower())
+                
+                # Adicionar à lista
+                for filename, filepath, size_str in files_found:
+                    file_listbox.insert(tk.END, f"📄 {filename}  [{size_str}]")
+                
+                if not files_found:
+                    file_listbox.insert(tk.END, "❌ Nenhum arquivo encontrado")
+                    file_listbox.config(fg=CyberColors.NEON_RED)
+                    
+            except PermissionError:
+                file_listbox.insert(tk.END, "❌ Permissão negada para acessar o diretório")
+                file_listbox.config(fg=CyberColors.NEON_RED)
+            except Exception as e:
+                file_listbox.insert(tk.END, f"❌ Erro: {str(e)}")
+                file_listbox.config(fg=CyberColors.NEON_RED)
+        else:
+            file_listbox.insert(tk.END, f"❌ Diretório não encontrado: {DEFAULT_COMBO_DIR}")
+            file_listbox.insert(tk.END, "")
+            file_listbox.insert(tk.END, "💡 Crie o diretório ou altere DEFAULT_COMBO_DIR")
+            file_listbox.config(fg=CyberColors.NEON_ORANGE)
+        
+        # Label de status
+        status_label = tk.Label(
+            selector,
+            text=f"📊 {len(files_found)} arquivo(s) encontrado(s)",
+            font=("Courier New", 10),
+            bg=CyberColors.BG_DARK,
+            fg=CyberColors.NEON_YELLOW
+        )
+        status_label.pack(pady=5)
+        
+        # Frame dos botões
+        button_frame = tk.Frame(selector, bg=CyberColors.BG_DARK)
+        button_frame.pack(fill=tk.X, padx=20, pady=15)
+        
+        def on_select():
+            """Selecionar arquivo da lista"""
+            selection = file_listbox.curselection()
+            if selection and files_found:
+                index = selection[0]
+                if index < len(files_found):
+                    filename, filepath, _ = files_found[index]
+                    self.file_entry.delete(0, tk.END)
+                    self.file_entry.insert(0, filepath)
+                    self.log_message(f"✓ Arquivo selecionado: {filepath}", "green")
+                    self.status_label.config(
+                        text=f"⚡ ARQUIVO CARREGADO: {filename}",
+                        fg=CyberColors.NEON_GREEN
+                    )
+                    selector.destroy()
+        
+        def on_double_click(event):
+            """Selecionar com duplo clique"""
+            on_select()
+        
+        def on_browse_manual():
+            """Abrir seletor de arquivo manual"""
+            selector.destroy()
+            filename = filedialog.askopenfilename(
+                title="Selecionar Arquivo de Lista",
+                initialdir=DEFAULT_COMBO_DIR if os.path.exists(DEFAULT_COMBO_DIR) else os.path.expanduser("~"),
+                filetypes=[
+                    ("Arquivos de Texto", "*.txt"),
+                    ("Arquivos CSV", "*.csv"),
+                    ("Todos os Arquivos", "*.*")
+                ]
             )
+            if filename:
+                self.file_entry.delete(0, tk.END)
+                self.file_entry.insert(0, filename)
+                self.log_message(f"✓ Arquivo selecionado: {filename}", "green")
+                self.status_label.config(
+                    text=f"⚡ ARQUIVO CARREGADO: {os.path.basename(filename)}",
+                    fg=CyberColors.NEON_GREEN
+                )
+        
+        def on_refresh():
+            """Atualizar lista de arquivos"""
+            selector.destroy()
+            self.show_combo_file_selector()
+        
+        # Bind duplo clique
+        file_listbox.bind('<Double-1>', on_double_click)
+        
+        # Botão Selecionar
+        tk.Button(
+            button_frame,
+            text="✓ SELECIONAR",
+            font=("Courier New", 12, "bold"),
+            bg=CyberColors.NEON_GREEN,
+            fg=CyberColors.BG_DARK,
+            activebackground=CyberColors.NEON_CYAN,
+            command=on_select,
+            padx=20,
+            pady=8,
+            cursor="hand2"
+        ).pack(side=tk.LEFT, padx=10)
+        
+        # Botão Atualizar
+        tk.Button(
+            button_frame,
+            text="🔄 ATUALIZAR",
+            font=("Courier New", 12, "bold"),
+            bg=CyberColors.NEON_CYAN,
+            fg=CyberColors.BG_DARK,
+            activebackground=CyberColors.NEON_PURPLE,
+            command=on_refresh,
+            padx=20,
+            pady=8,
+            cursor="hand2"
+        ).pack(side=tk.LEFT, padx=10)
+        
+        # Botão Buscar Manual
+        tk.Button(
+            button_frame,
+            text="📂 OUTRO LOCAL",
+            font=("Courier New", 12, "bold"),
+            bg=CyberColors.NEON_ORANGE,
+            fg=CyberColors.BG_DARK,
+            activebackground=CyberColors.NEON_YELLOW,
+            command=on_browse_manual,
+            padx=20,
+            pady=8,
+            cursor="hand2"
+        ).pack(side=tk.LEFT, padx=10)
+        
+        # Botão Cancelar
+        tk.Button(
+            button_frame,
+            text="✗ CANCELAR",
+            font=("Courier New", 12, "bold"),
+            bg=CyberColors.NEON_RED,
+            fg=CyberColors.TEXT_WHITE,
+            activebackground=CyberColors.NEON_PINK,
+            command=selector.destroy,
+            padx=20,
+            pady=8,
+            cursor="hand2"
+        ).pack(side=tk.RIGHT, padx=10)
+    
+    def format_file_size(self, size_bytes):
+        """Formatar tamanho do arquivo para exibição legível"""
+        if size_bytes < 1024:
+            return f"{size_bytes} B"
+        elif size_bytes < 1024 * 1024:
+            return f"{size_bytes / 1024:.1f} KB"
+        elif size_bytes < 1024 * 1024 * 1024:
+            return f"{size_bytes / (1024 * 1024):.1f} MB"
+        else:
+            return f"{size_bytes / (1024 * 1024 * 1024):.2f} GB"
     
     def clear_logs(self):
-        """Limpar logs do terminal"""
+        """Clear terminal logs"""
         self.log_text.delete(1.0, tk.END)
-        self.log_message("🗑 Logs limpos! Sistema pronto para nova verificação.", "yellow")
+        self.log_message("🗑 Logs cleared! System ready for new scan.", "yellow")
         self.display_welcome_message()
     
     def export_results(self):
-        """Exportar resultados válidos para local personalizado"""
+        """Export valid results to custom location"""
         if self.engine.total_valid == 0:
-            messagebox.showinfo("Informação", "Nenhum resultado válido para exportar ainda!")
+            messagebox.showinfo("Info", "No valid results to export yet!")
             return
         
         filename = filedialog.asksaveasfilename(
-            title="Exportar Resultados Válidos",
+            title="Export Valid Results",
             defaultextension=".txt",
             filetypes=[
-                ("Arquivos de Texto", "*.txt"),
-                ("Arquivos JSON", "*.json"),
-                ("Arquivos CSV", "*.csv"),
-                ("Todos os Arquivos", "*.*")
+                ("Text Files", "*.txt"),
+                ("JSON Files", "*.json"),
+                ("CSV Files", "*.csv"),
+                ("All Files", "*.*")
             ]
         )
         
@@ -1661,10 +1877,10 @@ class CyberpunkGUI:
             try:
                 with open(filename, 'w', encoding='utf-8') as f:
                     f.write("═" * 100 + "\n")
-                    f.write("VERIFICADOR DE LOGIN CPANEL - RESULTADOS VÁLIDOS (EDIÇÃO BASEADA EM PESQUISA V4.0)\n")
-                    f.write(f"Gerado em: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                    f.write("CPANEL LOGIN CHECKER - VALID RESULTS (RESEARCH-BASED EDITION V4.0)\n")
+                    f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                     f.write("═" * 100 + "\n\n")
-                    f.write("Fontes de Pesquisa:\n")
+                    f.write("Research Sources:\n")
                     f.write(": https://api.docs.cpanel.net/guides/guide-to-api-authentication/\n")
                     f.write(": https://docs.cpanel.net/knowledge-base/security/basic-security-concepts/\n")
                     f.write(": https://calmops.com/programming/python/asynchronous-http-requests-aiohttp/\n")
@@ -1675,33 +1891,33 @@ class CyberpunkGUI:
                         f.write(result + "\n")
                     
                     f.write("\n" + "═" * 100 + "\n")
-                    f.write(f"Total Válidos: {self.engine.total_valid}\n")
-                    f.write(f"Total Verificados: {self.engine.total_checked}\n")
-                    f.write(f"Taxa de Sucesso: {(self.engine.total_valid/self.engine.total_checked*100):.2f}%\n")
+                    f.write(f"Total Valid: {self.engine.total_valid}\n")
+                    f.write(f"Total Checked: {self.engine.total_checked}\n")
+                    f.write(f"Success Rate: {(self.engine.total_valid/self.engine.total_checked*100):.2f}%\n")
                     f.write("═" * 100 + "\n")
                 
-                self.log_message(f"✓ Resultados exportados para: {filename}", "green")
-                messagebox.showinfo("Sucesso", f"Resultados exportados com sucesso!\n\n{filename}")
+                self.log_message(f"✓ Results exported to: {filename}", "green")
+                messagebox.showinfo("Success", f"Results exported successfully!\n\n{filename}")
             except Exception as e:
-                self.log_message(f"✗ Falha na exportação: {str(e)}", "red")
-                messagebox.showerror("Erro", f"Falha ao exportar: {str(e)}")
+                self.log_message(f"✗ Export failed: {str(e)}", "red")
+                messagebox.showerror("Error", f"Failed to export: {str(e)}")
     
     def start_checking(self):
-        """Iniciar o processo de verificação"""
+        """Start the checking process"""
         file_path = self.file_entry.get().strip()
         
         if not file_path:
-            messagebox.showerror("Erro", "Por favor, selecione um arquivo primeiro!")
-            self.log_message("✗ ERRO: Nenhum arquivo selecionado", "red")
+            messagebox.showerror("Error", "Please select a file first!")
+            self.log_message("✗ ERROR: No file selected", "red")
             return
         
         if not os.path.exists(file_path):
-            messagebox.showerror("Erro", "Arquivo não encontrado!")
-            self.log_message(f"✗ ERRO: Arquivo não encontrado - {file_path}", "red")
+            messagebox.showerror("Error", "File not found!")
+            self.log_message(f"✗ ERROR: File not found - {file_path}", "red")
             return
         
         if self.engine.is_running:
-            messagebox.showwarning("Aviso", "A verificação já está em andamento!")
+            messagebox.showwarning("Warning", "Scanning is already in progress!")
             return
         
         # Reset counters
@@ -1721,14 +1937,14 @@ class CyberpunkGUI:
         except:
             pass
         
-        # Atualizar UI
+        # Update UI
         self.start_btn.config(
             state=tk.DISABLED,
-            text="⚡ VERIFICAÇÃO EM ANDAMENTO...",
+            text="⚡ SCANNING IN PROGRESS...",
             bg=CyberColors.NEON_ORANGE
         )
         self.status_label.config(
-            text="⚡ VERIFICAÇÃO EM ANDAMENTO - AGUARDE ⚡",
+            text="⚡ SCANNING IN PROGRESS - PLEASE WAIT ⚡",
             fg=CyberColors.NEON_GREEN
         )
         
@@ -1744,14 +1960,14 @@ class CyberpunkGUI:
                 import traceback
                 self.log_message(f"Traceback: {traceback.format_exc()}", "red")
             finally:
-                # Reabilitar botão
+                # Re-enable button
                 self.root.after(0, lambda: self.start_btn.config(
                     state=tk.NORMAL,
-                    text="▶ INICIAR VERIFICAÇÃO",
+                    text="▶ START SCANNING",
                     bg=CyberColors.NEON_GREEN
                 ))
                 self.root.after(0, lambda: self.status_label.config(
-                    text="⚡ VERIFICAÇÃO CONCLUÍDA - PRONTO PARA NOVA VERIFICAÇÃO ⚡",
+                    text="⚡ SCAN COMPLETED - READY FOR NEW SCAN ⚡",
                     fg=CyberColors.NEON_CYAN
                 ))
         
@@ -1759,19 +1975,19 @@ class CyberpunkGUI:
         thread.start()
 
 # ═══════════════════════════════════════════════════════════════
-# PONTO DE ENTRADA PRINCIPAL COM VERIFICAÇÃO DE DEPENDÊNCIAS
+# MAIN ENTRY POINT WITH DEPENDENCY CHECK
 # ═══════════════════════════════════════════════════════════════
 def check_dependencies():
-    """Verificar e instalar dependências necessárias"""
+    """Check and install required dependencies"""
     required_modules = {
         'aiohttp': 'aiohttp',
-        'asyncio': None,  # Embutido
+        'asyncio': None,  # Built-in
     }
     
     missing_modules = []
     
     for module_name, pip_name in required_modules.items():
-        if pip_name:  # Pular módulos embutidos
+        if pip_name:  # Skip built-in modules
             try:
                 __import__(module_name)
             except ImportError:
@@ -1779,15 +1995,15 @@ def check_dependencies():
     
     if missing_modules:
         print("═" * 90)
-        print("❌ ERRO: Dependências necessárias ausentes!")
+        print("❌ ERROR: Missing required dependencies!")
         print("═" * 90)
-        print("\nMódulos ausentes:")
+        print("\nMissing modules:")
         for module in missing_modules:
             print(f"  • {module}")
         print("\n" + "═" * 90)
-        print("Por favor, instale as dependências ausentes usando:")
+        print("Please install missing dependencies using:")
         print(f"  pip install {' '.join(missing_modules)}")
-        print("\nOu instale tudo de uma vez:")
+        print("\nOr install all at once:")
         print("  pip install aiohttp")
         print("═" * 90)
         return False
@@ -1795,9 +2011,9 @@ def check_dependencies():
     return True
 
 def main():
-    """Ponto de entrada principal"""
+    """Main entry point"""
     
-    # Banner ASCII Art
+    # ASCII Art Banner
     banner = """
 ╔═══════════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                       ║
@@ -1808,56 +2024,56 @@ def main():
 ║  ╚██████╗██║     ██║  ██║██║ ╚████║███████╗███████╗     ╚████╔╝      ██║           ║
 ║   ╚═════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝      ╚═══╝       ╚═╝           ║
 ║                                                                                       ║
-║       VERIFICADOR DE LOGIN - EDIÇÃO BASEADA EM PESQUISA V4.0                         ║
+║              LOGIN CHECKER - RESEARCH-BASED EDITION V4.0                             ║
 ║                                                                                       ║
-║  ⚡ DESENVOLVEDOR: SAMURAI KENZ                                                       ║
+║  ⚡ CODER: SAMURAI KENZ                                                               ║
 ║  🌐 WEBSITE: W3LLSTORE.COM                                                           ║
 ║  📱 TELEGRAM: @W3LLSTORE_ADMIN                                                       ║
-║  🔗 REDE: https://t.me/setupp_inbox                                                  ║
+║  🔗 NETWORK: https://t.me/setupp_inbox                                               ║
 ║                                                                                       ║
-║  FONTES DE PESQUISA:                                                                  ║
-║  : Autenticação Oficial API cPanel                                             ║
-║  : Segurança cPanel e Validação de Cookies                                     ║
-║  : Melhores Práticas de Connection Pooling aiohttp                             ║
-║  : Configuração de Portas SSL cPanel                                           ║
+║  RESEARCH SOURCES:                                                                    ║
+║  : cPanel Official API Authentication                                         ║
+║  : cPanel Security & Cookie Validation                                        ║
+║  : aiohttp Connection Pooling Best Practices                                  ║
+║  : cPanel SSL Ports Configuration                                             ║
 ║                                                                                       ║
 ╚═══════════════════════════════════════════════════════════════════════════════════════╝
 """
     
     print(banner)
-    print("\n⚡ Inicializando Verificador de Login cPanel V4.0...")
+    print("\n⚡ Initializing cPanel Login Checker V4.0...")
     print("═" * 90)
     
-    # Verificar versão do Python
+    # Check Python version
     if sys.version_info < (3, 7):
-        print("❌ ERRO: Python 3.7 ou superior é necessário!")
-        print(f"   Versão atual: {sys.version}")
-        print("\nPor favor, atualize o Python:")
-        print("   • Baixe de: https://www.python.org/downloads/")
+        print("❌ ERROR: Python 3.7 or higher is required!")
+        print(f"   Current version: {sys.version}")
+        print("\nPlease upgrade Python:")
+        print("   • Download from: https://www.python.org/downloads/")
         print("═" * 90)
-        input("\nPressione Enter para sair...")
+        input("\nPress Enter to exit...")
         sys.exit(1)
     
-    print(f"✓ Versão do Python: {sys.version.split()[0]}")
+    print(f"✓ Python version: {sys.version.split()[0]}")
     
-    # Verificar dependências
-    print("⚡ Verificando dependências...")
+    # Check dependencies
+    print("⚡ Checking dependencies...")
     if not check_dependencies():
-        input("\nPressione Enter para sair...")
+        input("\nPress Enter to exit...")
         sys.exit(1)
     
-    print("✓ Todas as dependências instaladas")
+    print("✓ All dependencies installed")
     print("═" * 90)
     
-    # Criar GUI
+    # Create GUI
     try:
-        print("⚡ Iniciando aplicação GUI...")
+        print("⚡ Starting GUI application...")
         print("═" * 90)
         
         root = tk.Tk()
         app = CyberpunkGUI(root)
         
-        # Centralizar janela na tela
+        # Center window on screen
         root.update_idletasks()
         width = root.winfo_width()
         height = root.winfo_height()
@@ -1865,46 +2081,46 @@ def main():
         y = (root.winfo_screenheight() // 2) - (height // 2)
         root.geometry(f'{width}x{height}+{x}+{y}')
         
-        print("✓ GUI inicializada com sucesso")
-        print("✓ Aplicação pronta!")
+        print("✓ GUI initialized successfully")
+        print("✓ Application ready!")
         print("═" * 90)
-        print("\n🚀 Abrindo janela da aplicação...")
-        print("\nRecursos baseados em pesquisa habilitados:")
-        print("  • Validação multicamadas (80%+ confiança)")
-        print("  • Zero falsos positivos/negativos")
-        print("  • Connection pooling avançado (300 conexões)")
-        print("  • Suporte SSL multi-porta (2083, 2087, 2096)")
-        print("  • Cache DNS com TTL de 600s")
-        print("  • Backoff exponencial com jitter")
+        print("\n🚀 Launching application window...")
+        print("\nResearch-based features enabled:")
+        print("  • Multi-layer validation (80%+ confidence)")
+        print("  • Zero false positives/negatives")
+        print("  • Advanced connection pooling (300 connections)")
+        print("  • Multi-port SSL support (2083, 2087, 2096)")
+        print("  • DNS caching with 600s TTL")
+        print("  • Exponential backoff with jitter")
         print("\n═" * 90)
         
-        # Executar loop principal
+        # Run main loop
         root.mainloop()
     
     except KeyboardInterrupt:
-        print("\n\n⚡ Aplicação interrompida pelo usuário")
+        print("\n\n⚡ Application interrupted by user")
         print("═" * 90)
         sys.exit(0)
     
     except Exception as e:
-        print(f"\n❌ ERRO CRÍTICO: {str(e)}")
+        print(f"\n❌ CRITICAL ERROR: {str(e)}")
         print("═" * 90)
         import traceback
-        print("\nTraceback completo:")
+        print("\nFull traceback:")
         print(traceback.format_exc())
         print("═" * 90)
-        input("\nPressione Enter para sair...")
+        input("\nPress Enter to exit...")
         sys.exit(1)
 
 # ═══════════════════════════════════════════════════════════════
-# PONTO DE ENTRADA
+# ENTRY POINT
 # ═══════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(f"\n❌ Erro fatal: {str(e)}")
+        print(f"\n❌ Fatal error: {str(e)}")
         import traceback
         traceback.print_exc()
-        input("\nPressione Enter para sair...")
+        input("\nPress Enter to exit...")
         sys.exit(1)
